@@ -49,8 +49,8 @@
     "schema.*"
   ],
   "scripts": {
-    "prepack": "unbuild",
-    "build:stub": "unbuild --stub",
+    "prepack": "tsdown",
+    "build": "tsdown",
     "test:attw": "attw --pack"
   },
   "dependencies": {
@@ -121,7 +121,8 @@
     "@vitejs/plugin-vue-jsx": "5.1.6",
     "@vue/compiler-sfc": "3.5.39",
     "rolldown": "1.2.0",
-    "unbuild": "3.6.1",
+    "tsdown": "0.22.0",
+    "typescript": "6.0.3",
     "vite": "8.1.4",
     "vitest": "4.1.10",
     "vue-bundle-renderer": "2.3.1",

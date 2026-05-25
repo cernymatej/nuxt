@@ -12,15 +12,15 @@
   "type": "module",
   "types": "./dist/index.d.mts",
   "exports": {
-    ".": "./dist/index.mjs",
+    ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "prepack": "obuild",
-    "build:stub": "obuild --stub",
+    "prepack": "tsdown",
+    "build": "tsdown",
     "test:attw": "attw --pack"
   },
   "dependencies": {
@@ -52,7 +52,7 @@
     "hookable": "6.1.1",
     "nitro": "3.0.260311-beta",
     "nitropack": "2.13.4",
-    "obuild": "0.4.38",
+    "tsdown": "0.22.0",
     "unimport": "6.3.0",
     "vite": "8.1.4",
     "vitest": "4.1.10",
@@ -60,5 +60,11 @@
   },
   "engines": {
     "node": ">=18.12.0"
+  },
+  "publishConfig": {
+    "exports": {
+      ".": "./dist/index.mjs",
+      "./package.json": "./package.json"
+    }
   }
 }

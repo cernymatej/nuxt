@@ -32,7 +32,6 @@ declare module 'nitropack/types' {
     /** @deprecated Use `noScripts` instead */
     experimentalNoScripts?: boolean
     appMiddleware?: Record<string, boolean>
-    appLayout?: string | false
   }
 }
 
