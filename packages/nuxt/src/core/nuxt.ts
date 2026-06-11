@@ -927,6 +927,7 @@ export async function loadNuxt (opts: LoadNuxtOptions): Promise<Nuxt> {
     options.devServerHandlers.unshift(...nitroOptions.devHandlers as NitroDevEventHandler[])
   }
   createPortalProperties(options.devServerHandlers, options, ['nitro.devHandlers', 'devServerHandlers'])
+  createPortalProperties(nitroOptions.tracingChannel, options, ['nitro.tracingChannel', 'tracingChannel'])
 
   // prevent replacement of options.nitro
   Object.defineProperties(options, {

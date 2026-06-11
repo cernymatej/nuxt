@@ -44,8 +44,40 @@ export default defineResolvers({
         }
       },
     },
+    tracingChannel: {
+      $resolve: async (val: unknown, get: ResolverGetter) => {
+        if (val === false) {
+          return false
+        }
+        const topLevel = await get('tracingChannel')
+        const base = typeof topLevel === 'object' ? topLevel : null
+        const override = val && typeof val === 'object' ? val : null
+        if (!base && !override) {
+          return val === true ? {} : false
+        }
+        return { ...(base || {}), ...(override || {}) }
+      },
+    },
   },
   routeRules: {},
   serverHandlers: [],
   devServerHandlers: [],
+  tracingChannel: {
+    // Nuxt emits the `nuxt.*` diagnostics channels itself. The Nitro-level
+    // channels (`srvx.request`, `h3.request`, `unstorage.*`) are only emitted
+    // by Nitro v3, so they are not advertised here; explicitly-set keys are
+    // still passed through for forward-compatibility.
+    $resolve: (val: unknown) => {
+      if (val === true) {
+        return { nuxt: true }
+      }
+      if (val && typeof val === 'object') {
+        return {
+          nuxt: true,
+          ...val,
+        }
+      }
+      return false
+    },
+  },
 })

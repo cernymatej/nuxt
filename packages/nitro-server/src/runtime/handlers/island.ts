@@ -9,6 +9,9 @@ import { getRequestDependencies } from 'vue-bundle-renderer/runtime'
 import { getQuery as getURLQuery } from 'ufo'
 import { computeIslandHash } from '#app/island-hash'
 import type { NuxtIslandContext, NuxtIslandResponse } from 'nuxt/app'
+import { traceAsync } from '#app/internal/tracing'
+// @ts-expect-error virtual file
+import { tracingChannelNuxt } from '#internal/nuxt.config.mjs'
 import { islandCache, islandPropCache } from '../utils/cache'
 import { createSSRContext } from '../utils/renderer/app'
 import { getSSRRenderer } from '../utils/renderer/build-files'
@@ -41,7 +44,10 @@ const handler: EventHandler = defineEventHandler(async (event) => {
   // Render app
   const renderer = await getSSRRenderer()
 
-  const renderResult = await renderer.renderToString(ssrContext).catch(async (err) => {
+  const renderResult = await (tracingChannelNuxt
+    ? traceAsync('nuxt.island', { event, ssrContext, islandContext }, () => renderer.renderToString(ssrContext))
+    : renderer.renderToString(ssrContext)
+  ).catch(async (err) => {
     if (ssrContext['~renderResponse'] && (err as Error)?.message === 'skipping render') {
       return {} as Awaited<ReturnType<typeof renderer.renderToString>>
     }
