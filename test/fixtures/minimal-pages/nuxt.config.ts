@@ -24,4 +24,6 @@ export default defineNuxtConfig({
   typescript: {
     typeCheck: isStubbed ? false : 'build',
   },
+  // eslint-disable-next-line nuxt/no-nuxt-config-test-key
+  test: false,
 })
