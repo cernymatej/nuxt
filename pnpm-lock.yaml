@@ -694,9 +694,6 @@ importers:
       file-loader:
         specifier: ^6.2.0
         version: 6.2.0(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
-      hash-sum:
-        specifier: ^2.0.0
-        version: 2.0.0
       jiti:
         specifier: ^2.7.0
         version: 2.7.0
@@ -748,6 +745,9 @@ importers:
       rolldown-string:
         specifier: ^0.3.0
         version: 0.3.0(rolldown@1.2.0)
+      rspack-vue-loader:
+        specifier: ^17.5.1
+        version: 17.6.1(@rspack/core@2.1.4(@swc/helpers@0.5.23))(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@6.0.3))
       seroval:
         specifier: ^1.5.5
         version: 1.5.5
@@ -775,9 +775,6 @@ importers:
       vue-bundle-renderer:
         specifier: ^2.3.1
         version: 2.3.1
-      vue-loader:
-        specifier: ^17.4.2
-        version: 17.4.2(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@6.0.3))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
       webpack-bundle-analyzer:
         specifier: ^5.3.1
         version: 5.3.1
@@ -8232,6 +8229,20 @@ packages:
 
   rou3@0.9.1:
     resolution: {integrity: sha512-z/sSmzvtwMDDnxsPVhfWMuG6F6mbmhFDXoVqLmMfbpDD9qfV3GDmSQpf0+W296/ZDIpW2wcMmBfpVFzcnOi/nA==}
+
+  rspack-vue-loader@17.6.1:
+    resolution: {integrity: sha512-jeeqh2wLcJLTd6AwYJjiEv62Bo6A7+OH4c7kGi4S2BF3E996cLtdY6ybAu8lG82EyUcr2lgV3kHoRnfD5QPUgA==}
+    peerDependencies:
+      '@rspack/core': ^1.0.0 || ^2.0.0
+      '@vue/compiler-sfc': '*'
+      vue: '*'
+    peerDependenciesMeta:
+      '@rspack/core':
+        optional: true
+      '@vue/compiler-sfc':
+        optional: true
+      vue:
+        optional: true
 
   run-applescript@7.1.0:
     resolution: {integrity: sha512-DPe5pVFaAsinSaV6QjQ6gdiedWDcRCbUuiQfQa2wmWV7+xC9bGulGI8+TdRmoFkAPaBXk8CrAbnlY2ISniJ47Q==}
@@ -17296,6 +17307,15 @@ snapshots:
   rou3@0.8.1: {}
 
   rou3@0.9.1: {}
+
+  rspack-vue-loader@17.6.1(@rspack/core@2.1.4(@swc/helpers@0.5.23))(@vue/compiler-sfc@3.5.39)(vue@3.5.39(typescript@6.0.3)):
+    dependencies:
+      '@rspack/lite-tapable': 1.1.2
+      chalk: 4.1.2
+    optionalDependencies:
+      '@rspack/core': 2.1.4(@swc/helpers@0.5.23)
+      '@vue/compiler-sfc': 3.5.39
+      vue: 3.5.39(typescript@6.0.3)
 
   run-applescript@7.1.0: {}
 
