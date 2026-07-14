@@ -60,10 +60,12 @@ const fixtureMatrix: FixtureMatrixEntry[] = [
   { env: 'dev', builder: 'vite-env-api', context: 'default', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'vite-env-api', context: 'async', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'vite-env-api', context: 'default', manifest: 'manifest-on', payload: 'json' },
-  // rspack: only built + manifest-on + json payload
+  // rspack: only manifest-on + json payload
+  { env: 'dev', builder: 'rspack', context: 'async', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'rspack', context: 'async', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'rspack', context: 'default', manifest: 'manifest-on', payload: 'json' },
-  // webpack: only built + manifest-on + json payload
+  // webpack: only manifest-on + json payload
+  { env: 'dev', builder: 'webpack', context: 'async', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'webpack', context: 'async', manifest: 'manifest-on', payload: 'json' },
   { env: 'built', builder: 'webpack', context: 'default', manifest: 'manifest-on', payload: 'json' },
 ]
