@@ -93,6 +93,11 @@ interface BaseAsyncDataOptions<
    * A timeout in milliseconds after which the request will be aborted if it has not resolved yet.
    */
   timeout?: number
+  /**
+   * Controls whether to run the async function
+   * @default true
+   */
+  enabled?: MaybeRefOrGetter<boolean>
 }
 
 export interface AsyncDataOptions<
@@ -385,6 +390,7 @@ export const createUseAsyncData: CreateUseAsyncData = defineKeyedFunctionFactory
       opts.immediate ??= true
       opts.deep ??= asyncDataDefaults.deep
       opts.dedupe ??= 'cancel'
+      opts.enabled ??= true
 
       // assign overrides from factory
       if (shouldFactoryOptionsOverride) {
@@ -575,10 +581,27 @@ export const createUseAsyncData: CreateUseAsyncData = defineKeyedFunctionFactory
             })
           : noop
 
+        // Enabled watcher: when `enabled` becomes falsy, cancel any in-flight request
+        // (without clearing data). Only needed when `enabled` is reactive (a ref or getter).
+        const unsubEnabledWatcher = isRef(opts.enabled) || typeof opts.enabled === 'function'
+          ? watch(() => toValue(opts.enabled), (isEnabled) => {
+              const entry = nuxtApp._asyncData[key.value]
+              if (isEnabled || !entry || !nuxtApp._asyncDataPromises[key.value]) { return }
+              entry._abortController?.abort(new DOMException('AsyncData request cancelled by `enabled: false`', 'AbortError'))
+              entry._abortController = undefined
+              delete nuxtApp._asyncDataPromises[key.value]
+              if (pendingWhenIdle) {
+                entry.pending.value = false
+              }
+              entry.status.value = 'idle'
+            })
+          : noop
+
         if (hasScope) {
           onScopeDispose(() => {
             unsubKeyWatcher()
             unsubParamsWatcher()
+            unsubEnabledWatcher()
             unregister(key.value)
           })
         }
@@ -834,6 +857,10 @@ function buildAsyncData<
           asyncData.status.value = 'success'
           return Promise.resolve(cachedData)
         }
+      }
+      // if is not enabled, the fetch is prevented
+      if (toValue(options.enabled) === false) {
+        return Promise.resolve(asyncData.data.value)
       }
       if (pendingWhenIdle) {
         asyncData.pending.value = true
