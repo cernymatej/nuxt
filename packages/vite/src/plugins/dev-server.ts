@@ -37,13 +37,19 @@ export function DevServerPlugin (nuxt: Nuxt): Plugin {
       }
 
       if (config.server && config.server.hmr !== false) {
+        // Attach HMR to Nuxt's dev server (captured in core from the `listen`
+        // hook) so it shares the app's port and certificate. Falls back to a
+        // dedicated HMR port when that server isn't available (e.g. an older
+        // core, where the dev CLI wires this up instead).
+        const hmrServer = nuxt._devServerListener
         const serverDefaults: Omit<ServerOptions, 'hmr'> & { hmr: Exclude<ServerOptions['hmr'], boolean> } = {
           hmr: {
             protocol: nuxt.options.devServer.https ? 'wss' : undefined,
+            server: hmrServer,
           },
         }
         /* eslint-disable-next-line @typescript-eslint/no-deprecated */
-        if (typeof config.server.hmr !== 'object' || !config.server.hmr.server) {
+        if (!hmrServer && (typeof config.server.hmr !== 'object' || !config.server.hmr.server)) {
           serverDefaults.hmr ??= {}
           const hmrPortDefault = 24678 // Vite's default HMR port
           /* eslint-disable-next-line @typescript-eslint/no-deprecated */
