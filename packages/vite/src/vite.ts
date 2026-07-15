@@ -36,6 +36,7 @@ import { StableEntryPlugin } from './plugins/stable-entry.ts'
 import { VitePluginCheckerPlugin } from './plugins/vite-plugin-checker.ts'
 import { AnalyzePlugin } from './plugins/analyze.ts'
 import { DevServerPlugin } from './plugins/dev-server.ts'
+import { TemplateHMRPlugin } from './plugins/template-hmr.ts'
 import { EnvironmentsPlugin } from './plugins/environments.ts'
 import { ViteNodePlugin } from './plugins/vite-node.ts'
 import { ServerEntryPlugin } from './plugins/server-entry.ts'
@@ -200,6 +201,7 @@ export const bundle: NuxtBuilder['bundle'] = async (nuxt) => {
               // After ClientManifestPlugin so its dev `clientManifest` override wins.
               ViteNodePlugin(nuxt),
               DevServerPlugin(nuxt),
+              TemplateHMRPlugin(nuxt),
             ]
           : [],
         // lower decorators after Vue SFC compilation and TypeScript stripping

@@ -7,7 +7,6 @@ import type { H3Event as H3V1Event } from 'h3'
 import { useNitro } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import type { IncomingMessage, ServerResponse } from 'node:http'
-import { toVirtualId } from '../utils/index.ts'
 
 export function DevServerPlugin (nuxt: Nuxt): Plugin {
   let useViteCors = false
@@ -60,16 +59,6 @@ export function DevServerPlugin (nuxt: Nuxt): Plugin {
       }
     },
     async configureServer (viteServer) {
-      // Invalidate virtual modules when templates are re-generated
-      nuxt.hook('app:templatesGenerated', async (_app, changedTemplates) => {
-        await Promise.all(changedTemplates.map(async (template) => {
-          for (const mod of viteServer.moduleGraph.getModulesByFile(toVirtualId(template.dst, nuxt)) || []) {
-            viteServer.moduleGraph.invalidateModule(mod)
-            await viteServer.reloadModule(mod)
-          }
-        }))
-      })
-
       if (nuxt.options.experimental.viteEnvironmentApi) {
         await nuxt.callHook('vite:serverCreated', viteServer, { isClient: true, isServer: true })
       }
