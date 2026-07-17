@@ -1,23 +1,18 @@
 import type { DefineComponent, ExtractPublicPropTypes, MaybeRef, PropType, VNode } from 'vue'
 import { Suspense, computed, defineComponent, h, inject, mergeProps, nextTick, onMounted, provide, shallowReactive, shallowRef, unref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
-import type { NitroRouteRules } from 'nitropack/types'
+
 import type { NuxtLayouts, PageMeta } from '../../pages/runtime/composables'
 
+import { resolveLayoutName } from '../composables/layout'
 import { useRoute, useRouter } from '../composables/router'
 import { useNuxtApp } from '../nuxt'
 import { _mergeTransitionProps, _wrapInTransition } from './utils'
-import { LayoutMetaSymbol, PageRouteSymbol } from './injections'
+import { LayoutMetaSymbol, LayoutSymbol, PageRouteSymbol } from './injections'
 
 import { useRoute as useVueRouterRoute } from '#build/pages'
 import layouts from '#build/layouts'
 import { appLayoutTransition as defaultLayoutTransition } from '#build/nuxt.config.mjs'
-import _routeRulesMatcher from '#build/route-rules.mjs'
-
-// nitropack v2's `NitroRouteRules` has no index signature, and the generated
-// `nitro-layouts.d.ts` template already declares `appLayout` with a narrowed
-// `LayoutKey` type, so we widen locally rather than augmenting globally
-const routeRulesMatcher = _routeRulesMatcher as (path: string) => NitroRouteRules & { appLayout?: string | false }
 
 const LayoutLoader = defineComponent({
   name: 'LayoutLoader',
@@ -60,7 +55,7 @@ export default defineComponent({
 
     const layout = computed(() => {
       type LayoutName = keyof NuxtLayouts | false | 'default'
-      let layout: LayoutName = unref(props.name as LayoutName) ?? route?.meta.layout as string ?? routeRulesMatcher(route?.path).appLayout ?? 'default'
+      let layout = resolveLayoutName(route, props.name) as LayoutName
       if (layout && !(layout in layouts)) {
         if (import.meta.dev && layout !== 'default') {
           console.warn(`[nuxt] Invalid layout \`${layout}\` selected.`)
@@ -71,6 +66,8 @@ export default defineComponent({
       }
       return layout
     })
+
+    provide(LayoutSymbol, layout)
 
     const layoutRef = shallowRef()
     context.expose({ layoutRef })
@@ -172,7 +169,7 @@ const LayoutProvider = defineComponent({
     if (props.shouldProvide) {
       provide(LayoutMetaSymbol, {
         // When name=false, always return true so NuxtPage doesn't skip rendering
-        isCurrent: (route: RouteLocationNormalizedLoaded) => name === false || name === (route.meta.layout ?? routeRulesMatcher(route.path).appLayout ?? 'default'),
+        isCurrent: (route: RouteLocationNormalizedLoaded) => name === false || name === resolveLayoutName(route),
       })
     }
 
