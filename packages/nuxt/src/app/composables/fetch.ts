@@ -1,19 +1,17 @@
 import type { FetchOptions, ResponseType as _ResponseType } from 'ofetch'
-import type { $Fetch, H3Event$Fetch, NitroFetchRequest, TypedInternalResponse, AvailableRouterMethod as _AvailableRouterMethod } from 'nitropack/types'
+import type { $Fetch, NitroFetchRequest, TypedInternalResponse, AvailableRouterMethod as _AvailableRouterMethod } from 'nitropack/types'
 import type { MaybeRef, MaybeRefOrGetter, Ref } from 'vue'
 import { computed, reactive, toValue, watch } from 'vue'
 import { hash } from 'ohash'
 
 import { isPlainObject } from '@vue/shared'
 import { useRequestFetch } from './ssr'
-// @ts-expect-error virtual file
-import { $fetch as _$fetch } from '#build/fetch.mjs'
+import { $fetch as _$fetch } from '#build/fetch'
 import type { AsyncData, AsyncDataOptions, KeysOf, MultiWatchSources, PickFrom, _Transform } from './asyncData'
 import { useAsyncData } from './asyncData'
 import type { NuxtError } from './error'
 import { defineKeyedFunctionFactory } from '../../compiler/runtime'
 
-// @ts-expect-error virtual file
 import { alwaysRunFetchOnKeyChange, fetchDefaults } from '#build/nuxt.config.mjs'
 
 const $fetch = _$fetch as $Fetch
@@ -364,7 +362,8 @@ export const createUseFetch: CreateUseFetch = defineKeyedFunctionFactory<CreateU
       }
 
       const asyncData = useAsyncData<_ResT, ErrorT, DataT, PickKeys, DefaultT>(key, (_, { signal }) => {
-        let _$fetch: H3Event$Fetch | $Fetch<unknown, NitroFetchRequest> = fetchOptions.$fetch || $fetch
+        // Typed as a plain callable rather than `$Fetch`: unioning/comparing two route-mapped `$Fetch` instantiations blows the recursion limit under nitropack v2's typed-route matcher.
+        let _$fetch: (request: NitroFetchRequest, options?: any) => Promise<unknown> = fetchOptions.$fetch || $fetch
 
         // Use fetch with request context and headers for server direct API calls
         if (import.meta.server && !fetchOptions.$fetch) {

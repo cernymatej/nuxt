@@ -12,7 +12,7 @@ import { streamingIifeCode } from '@unhead/vue/stream/iife'
 import type { Link, Script } from '@unhead/vue/types'
 import destr from 'destr'
 import { defineRenderHandler, getRouteRules, useNitroApp } from 'nitropack/runtime'
-import type { NuxtPayload, NuxtRenderHTMLContext, NuxtSSRContext } from 'nuxt/app'
+import type { NuxtPayload, NuxtRenderHTMLContext, NuxtSSRContext } from '#app/types'
 import { traceAsync } from '#app/internal/tracing'
 
 import { APP_ROOT_CLOSE_TAG, APP_ROOT_OPEN_TAG, getRenderer, getServerApp } from '../utils/renderer/build-files'
@@ -22,15 +22,11 @@ import { renderPayloadJsonScript, renderPayloadResponse, renderPayloadScript, sp
 import { createSSRContext, setSSRError } from '../utils/renderer/app'
 import { renderInlineStyles } from '../utils/renderer/inline-styles'
 import { renderStreamedIslandTeleports, replaceIslandTeleports } from '../utils/renderer/islands'
-// @ts-expect-error virtual file
 import { renderSSRHeadOptions } from '#internal/unhead.config.mjs'
-// @ts-expect-error virtual file
 import { NUXT_ASYNC_CONTEXT, NUXT_EARLY_HINTS, NUXT_INLINE_STYLES, NUXT_JSON_PAYLOADS, NUXT_NO_SCRIPTS, NUXT_PAYLOAD_EXTRACTION, NUXT_PAYLOAD_INLINE, NUXT_RUNTIME_PAYLOAD_EXTRACTION, NUXT_SSR_STREAMING, NUXT_SSR_STREAMING_BOT_RE, PARSE_ERROR_DATA } from '#internal/nuxt/nitro-config.mjs'
-// @ts-expect-error virtual file
 import { appHead, appTeleportAttrs, appTeleportTag, componentIslands, componentIslandsActive, tracingChannelNuxt } from '#internal/nuxt.config.mjs'
 import entryIds from 'nuxt/entry-ids'
 import { entryFileName } from 'nuxt/entry-chunk'
-// @ts-expect-error virtual file
 import { iifeChunkFileName } from '#internal/streaming-iife-chunk.mjs'
 import { buildAssetsURL, publicAssetsURL } from '../utils/paths'
 import { relative } from 'pathe'

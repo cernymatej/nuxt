@@ -31,6 +31,7 @@ export const isNuxtPrepare = process.argv.slice(2).includes('prepare')
 export function withMatrix (config: NuxtConfig) {
   return defu(config, {
     builder,
+    devtools: { enabled: false },
     future: {
       typescriptBundlerResolution,
     },

@@ -3,7 +3,6 @@ import { AsyncLocalStorage } from 'node:async_hooks'
 // This is likely not portable. A type annotation is necessary.
 import type { Storage } from 'unstorage'
 import { useStorage } from 'nitropack/runtime'
-// @ts-expect-error virtual file
 import { NUXT_RUNTIME_PAYLOAD_EXTRACTION, NUXT_SHARED_DATA } from '#internal/nuxt/nitro-config.mjs'
 
 /**

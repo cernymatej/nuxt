@@ -2,8 +2,7 @@ import type { H3Event } from '@nuxt/nitro-server/h3'
 import { setResponseStatus as _setResponseStatus, appendHeader, getRequestHeader, getRequestHeaders, getResponseHeader, removeResponseHeader, setResponseHeader } from '@nuxt/nitro-server/h3'
 import { computed, getCurrentInstance, ref } from 'vue'
 import type { $Fetch, H3Event$Fetch } from 'nitropack/types'
-// @ts-expect-error virtual file
-import { $fetch as _$fetch } from '#build/fetch.mjs'
+import { $fetch as _$fetch } from '#build/fetch'
 
 import type { NuxtApp } from '../nuxt'
 import { useNuxtApp } from '../nuxt'
@@ -50,7 +49,8 @@ export function useRequestFetch (): H3Event$Fetch | $Fetch {
   if (import.meta.client) {
     return $fetch
   }
-  return useRequestEvent()?.$fetch || $fetch
+  // Fallback cast keeps this expression a single `H3Event$Fetch`: unioning two route-mapped fetch types here blows the recursion limit under nitropack v2's typed-route matcher.
+  return useRequestEvent()?.$fetch || ($fetch as unknown as H3Event$Fetch)
 }
 
 /** @since 3.0.0 */

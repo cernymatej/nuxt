@@ -11,9 +11,7 @@ import type { ParsedTrace } from 'errx'
 import { isVNode } from 'vue'
 import type { NitroApp } from 'nitropack/types'
 
-// @ts-expect-error virtual file
 import { rootDir } from '#internal/dev-server-logs-options'
-// @ts-expect-error virtual file
 import { appId } from '#internal/nuxt.config.mjs'
 
 const devReducers: Record<string, (data: any) => any> = {

@@ -252,6 +252,10 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
           skipLibCheck: true,
           noUncheckedIndexedAccess: true,
           allowArbitraryExtensions: true,
+          // Workspace `nuxt`/`@nuxt/schema` resolve to source `.ts` via their dev
+          // exports, so the generated server project must permit `.ts` import
+          // specifiers when type-checking against that source.
+          allowImportingTsExtensions: true,
         },
         include: [
           join(nuxt.options.buildDir, 'types/nitro-nuxt.d.ts'),
@@ -748,6 +752,16 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
     if (isDirectory) {
       tsConfig.compilerOptions.paths[`${alias}/*`] = [`${absolutePath}/*`]
     }
+  }
+
+  // TODO: remove in future
+  // `#app` itself is intentionally excluded from the server tsconfig, but
+  // we need these aliases as we import them directly into the renderers
+  const appDir = nuxt.options.alias['#app']
+  if (appDir) {
+    tsConfig.compilerOptions.paths['#app/island-hash'] ||= [resolve(appDir, 'island-hash')]
+    tsConfig.compilerOptions.paths['#app/internal/*'] ||= [resolve(appDir, 'internal/*')]
+    tsConfig.compilerOptions.paths['#app/types'] ||= [resolve(appDir, 'types')]
   }
 
   // Init nitro

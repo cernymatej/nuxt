@@ -1,7 +1,8 @@
+/// <reference path="./internal.d.ts" />
 import type { Nitro, NitroConfig, NitroDevEventHandler, NitroEventHandler, NitroOptions, NitroRouteConfig, NitroRuntimeConfig, NitroRuntimeConfigApp } from 'nitropack/types'
 import type { EventHandler, H3Event } from 'h3'
 import type { LogObject } from 'consola'
-import type { NuxtIslandContext, NuxtIslandResponse, NuxtRenderChunkContext, NuxtRenderCloseContext, NuxtRenderHTMLContext, NuxtRenderRouteContext } from 'nuxt/app'
+import type { NuxtIslandContext, NuxtIslandResponse, NuxtRenderChunkContext, NuxtRenderCloseContext, NuxtRenderHTMLContext, NuxtRenderRouteContext } from '#app/types'
 import type { HookResult, RuntimeConfig, TSReference } from 'nuxt/schema'
 
 /**
@@ -24,6 +25,7 @@ declare module 'nitropack' {
   interface NitroRuntimeConfigApp {
     buildAssetsDir: string
     cdnURL: string
+    buildId: string
   }
   interface NitroRouteRules {
     ssr?: boolean
@@ -32,7 +34,6 @@ declare module 'nitropack' {
     /** @deprecated Use `noScripts` instead */
     experimentalNoScripts?: boolean
     appMiddleware?: Record<string, boolean>
-    appLayout?: string | false
   }
   interface NitroConfig {
     tracingChannel?: boolean | NuxtTracingChannelOptions
@@ -43,6 +44,7 @@ declare module 'nitropack/types' {
   interface NitroRuntimeConfigApp {
     buildAssetsDir: string
     cdnURL: string
+    buildId: string
   }
   interface NitroRouteRules {
     ssr?: boolean
@@ -51,7 +53,6 @@ declare module 'nitropack/types' {
     /** @deprecated Use `noScripts` instead */
     experimentalNoScripts?: boolean
     appMiddleware?: Record<string, boolean>
-    appLayout?: string | false
   }
   interface NitroConfig {
     tracingChannel?: boolean | NuxtTracingChannelOptions
@@ -202,7 +203,7 @@ declare module '@nuxt/schema' {
   interface RuntimeConfig {
     app: NitroRuntimeConfigApp
     /** Only available on the server. */
-    nitro?: NitroRuntimeConfig['nitro']
+    nitro?: NitroRuntimeConfig['"nitro"']
   }
 
   interface NuxtDebugOptions {
@@ -319,7 +320,7 @@ declare module 'nuxt/schema' {
   interface RuntimeConfig {
     app: NitroRuntimeConfigApp
     /** Only available on the server. */
-    nitro?: NitroRuntimeConfig['nitro']
+    nitro?: NitroRuntimeConfig['"nitro"']
   }
 
   interface NuxtDebugOptions {

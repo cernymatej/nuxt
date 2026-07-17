@@ -14,7 +14,6 @@ import { injectHead } from '../composables/head'
 import { getFragmentHTML, isEndFragment, isStartFragment } from './utils'
 import { computeIslandHash, serializeIslandProps } from '../island-hash'
 
-// @ts-expect-error virtual file
 import { appBaseURL, remoteComponentIslands, selectiveClient } from '#build/nuxt.config.mjs'
 
 const pKey = '_islandPromises'
