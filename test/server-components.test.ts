@@ -42,7 +42,7 @@ await setup({
 })
 
 describe('server components/islands', () => {
-  itFailsIf(isWebpack && isDev)('/islands', async () => {
+  it('/islands', async () => {
     const { page } = await renderPage('/islands')
     const islandRequest = page.waitForResponse(response => response.url().includes('/__nuxt_island/') && response.status() === 200)
     await page.locator('#increase-pure-component').click()
@@ -219,7 +219,7 @@ describe('component islands', () => {
     `)
   })
 
-  itFailsIf(isWebpack && isDev)('render async component', async () => {
+  it('render async component', async () => {
     const result = await $fetch<NuxtIslandResponse>(islandURL('LongAsyncComponent', { props: { count: 3 } }))
     if (isDev) {
       result.head.link = result.head.link?.filter(l => typeof l.href !== 'string' || (!l.href.includes('_nuxt/components/islands/LongAsyncComponent') && !l.href.includes('PureComponent') /* TODO: fix dev bug triggered by previous fetch of /islands */))
@@ -277,7 +277,7 @@ describe('component islands', () => {
     `)
   })
 
-  itFailsIf(isWebpack && isDev)('render .server async component', async () => {
+  it('render .server async component', async () => {
     const result = await $fetch<NuxtIslandResponse>(islandURL('AsyncServerComponent', { props: { count: 2 } }))
     if (isDev) {
       result.head.link = result.head.link?.filter(l => typeof l.href === 'string' && !l.href.includes('PureComponent') /* TODO: fix dev bug triggered by previous fetch of /islands */ && (!l.href.startsWith('_nuxt/components/islands/') || l.href.includes('AsyncServerComponent')))
@@ -415,7 +415,7 @@ describe('component islands', () => {
     `)
   })
 
-  itFailsIf(isWebpack && isDev)('test client-side navigation', async () => {
+  it('test client-side navigation', async () => {
     const { page } = await renderPage('/')
     await page.click('#islands')
     await page.waitForFunction(() => window.useNuxtApp?.()._route.fullPath === '/islands')
