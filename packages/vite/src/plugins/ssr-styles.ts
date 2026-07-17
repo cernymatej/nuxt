@@ -96,7 +96,7 @@ export function SSRStylesPlugin (nuxt: Nuxt): Plugin | undefined {
       }
     }
 
-    setBuildOutput('entryIds', () => `export default ${JSON.stringify(Array.from(entryIds))}`)
+    setBuildOutput('entryIds', () => `export default ${JSON.stringify(Array.from(entryIds))}`, nuxt)
   })
 
   const cssMap: Record<string, { files: string[], inBundle?: boolean, cssIds?: Set<string> }> = {}
@@ -155,7 +155,8 @@ export function SSRStylesPlugin (nuxt: Nuxt): Plugin | undefined {
         enforce: 'pre',
         buildStart () {
           if (this.environment.name === 'ssr') {
-            setBuildOutput('ssrStyles', resolve(this.environment.config.build.outDir, 'styles.mjs'))
+            const stylesPath = resolve(this.environment.config.build.outDir, 'styles.mjs')
+            setBuildOutput('ssrStyles', () => `export { default } from ${JSON.stringify(stylesPath)}`, nuxt)
           }
         },
         resolveId: {

@@ -334,10 +334,11 @@ export class SSRStylesPlugin {
       ].join('\n')
 
       compilation.emitAsset('styles.mjs', new rawSource(stylesSource))
-      setBuildOutput('ssrStyles', resolve(this.nuxt.options.buildDir, 'dist/server/styles.mjs'))
+      const stylesPath = resolve(this.nuxt.options.buildDir, 'dist/server/styles.mjs')
+      setBuildOutput('ssrStyles', () => `export { default } from ${JSON.stringify(stylesPath)}`, this.nuxt)
 
       const entryIds = Array.from(this.chunksWithInlinedCSS).filter(id => entryModules.has(id))
-      setBuildOutput('entryIds', () => `export default ${JSON.stringify(entryIds)}`)
+      setBuildOutput('entryIds', () => `export default ${JSON.stringify(entryIds)}`, this.nuxt)
     })
   }
 
