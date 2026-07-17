@@ -5,7 +5,7 @@ import { cpus } from 'node:os'
 import process from 'node:process'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
-import type { Nuxt, NuxtOptions } from '@nuxt/schema'
+import type { Nuxt, NuxtBuildOutputs, NuxtOptions } from '@nuxt/schema'
 import { addRoute, createRouter as createRou3Router, findAllRoutes } from 'rou3'
 import { compileRouterToString } from 'rou3/compiler'
 import { join, relative, resolve } from 'pathe'
@@ -38,6 +38,15 @@ const logLevelMapReverse = {
   info: 3,
   verbose: 3,
 } satisfies Record<NuxtOptions['logLevel'], NitroConfig['logLevel']>
+
+const NUXT_BUILD_OUTPUT_MAP: Record<string, keyof NuxtBuildOutputs> = {
+  'nuxt/entry': 'serverEntry',
+  'nuxt/manifest': 'clientManifest',
+  'nuxt/precomputed': 'clientPrecomputed',
+  'nuxt/styles': 'ssrStyles',
+  'nuxt/entry-chunk': 'entryChunkName',
+  'nuxt/entry-ids': 'entryIds',
+}
 
 export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
   // Resolve config
@@ -199,11 +208,13 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
       '#internal/nuxt.config.mjs': () => nuxt.vfs['#build/nuxt.config.mjs'] || '',
       '#internal/nuxt/app-config': () => nuxt.vfs['#build/app.config.mjs']?.replace(/\/\*\* client \*\*\/[\s\S]*\/\*\* client-end \*\*\//, '') || '',
       '#spa-template': async () => `export const template = ${JSON.stringify(await spaLoadingTemplate(nuxt))}`,
-      // this will be overridden in vite plugin
-      '#internal/entry-chunk.mjs': () => `export const entryFileName = undefined`,
+      // Build output defaults; overridden by builders via setBuildOutput(). Kept
+      // here (rather than in the loop below) so they resolve in the nitro
+      // environment even when the loop is scoped away from it.
+      'nuxt/entry-chunk': () => nuxt.buildOutputs.entryChunkName(),
+      'nuxt/entry-ids': () => nuxt.buildOutputs.entryIds(),
       // overridden by head module when SSR streaming is enabled
       '#internal/streaming-iife-chunk.mjs': () => `export const iifeChunkFileName = undefined`,
-      '#internal/nuxt/entry-ids.mjs': () => `export default []`,
       '#internal/nuxt/nitro-config.mjs': () => {
         const hasCachedRoutes = Object.values(nitro.options.routeRules).some(r => r.isr || r.cache)
         return [
@@ -541,21 +552,18 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
     nuxt.options.alias['#app-manifest'] = mockProxy
   }
 
-  // Add fallback server for `ssr: false`
-  const FORWARD_SLASH_RE = /\//g
-  if (!nuxt.options.ssr) {
-    nitroConfig.virtual!['#build/dist/server/server.mjs'] = 'export default () => {}'
-    // In case a non-normalized absolute path is called for on Windows
-    if (process.platform === 'win32') {
-      nitroConfig.virtual!['#build/dist/server/server.mjs'.replace(FORWARD_SLASH_RE, '\\')] = 'export default () => {}'
+  for (const [specifier, key] of Object.entries(NUXT_BUILD_OUTPUT_MAP)) {
+    if (specifier === 'nuxt/entry-chunk' || specifier === 'nuxt/entry-ids') {
+      continue // already registered above in the virtual block
     }
-  }
-
-  if (nuxt.options.dev || !nuxt.options.ssr) {
-    nitroConfig.virtual!['#build/dist/server/styles.mjs'] = 'export default {}'
-    // In case a non-normalized absolute path is called for on Windows
-    if (process.platform === 'win32') {
-      nitroConfig.virtual!['#build/dist/server/styles.mjs'.replace(FORWARD_SLASH_RE, '\\')] = 'export default {}'
+    nitroConfig.virtual![specifier] = () => {
+      const provider = nuxt.buildOutputs[key]
+      if (key === 'ssrStyles') {
+        return provider
+          ? `export { default } from ${JSON.stringify(pathToFileURL(provider as string).href)}`
+          : 'export default {}'
+      }
+      return (provider as () => string | Promise<string>)()
     }
   }
 
@@ -1022,7 +1030,7 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
       nuxt.hook(`${builder}:compile`, ({ name, compiler }) => {
         if (name === 'server') {
           const memfs = compiler.outputFileSystem as typeof import('node:fs')
-          nitro.options.virtual['#build/dist/server/server.mjs'] = () => memfs.readFileSync(join(nuxt.options.buildDir, 'dist/server/server.mjs'), 'utf-8')
+          nitro.options.virtual['nuxt/entry'] = () => memfs.readFileSync(join(nuxt.options.buildDir, 'dist/server/server.mjs'), 'utf-8')
         }
       })
       nuxt.hook(`${builder}:compiled`, () => {

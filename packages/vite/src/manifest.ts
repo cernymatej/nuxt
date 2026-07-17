@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs'
 import { mkdir, rm, writeFile } from 'node:fs/promises'
 
 import { relative, resolve } from 'pathe'
+import { setBuildOutput } from '@nuxt/kit'
 import { withTrailingSlash, withoutLeadingSlash } from 'ufo'
 import escapeRE from 'escape-string-regexp'
 import { normalizeViteManifest, precomputeDependencies } from 'vue-bundle-renderer'
@@ -71,6 +72,13 @@ export async function writeManifest (ctx: ViteBuildContext) {
   await writeFile(resolve(serverDist, 'client.precomputed.mjs'), 'export default ' + serialize(precomputed), 'utf8')
 
   if (!nuxt.options.dev) {
+    // The serial (non-`viteEnvironmentApi`) build writes the client manifest and
+    // precomputed data to disk instead of via `ClientManifestPlugin`; point the
+    // `nuxt/*` build outputs at those emitted modules.
+    const manifestPath = resolve(serverDist, 'client.manifest.mjs')
+    const precomputedPath = resolve(serverDist, 'client.precomputed.mjs')
+    setBuildOutput('clientManifest', () => `export { default } from ${JSON.stringify(manifestPath)}`)
+    setBuildOutput('clientPrecomputed', () => `export { default } from ${JSON.stringify(precomputedPath)}`)
     await rm(manifestFile, { force: true })
   }
 }
