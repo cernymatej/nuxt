@@ -53,6 +53,19 @@ export function getIslandHash (input: {
   return hash([input.name, props, input.context ?? {}, input.source]).replace(/[-_]/g, '')
 }
 
+/**
+ * @internal
+ * @deprecated use `getIslandHash` instead
+ */
+export function computeIslandHash (
+  name: string,
+  serializedProps: string,
+  context: Record<string, any>,
+  source: string | undefined,
+): string {
+  return getIslandHash({ name, props: serializedProps, context, source })
+}
+
 function parseSerializedProps (serializedProps: string): unknown {
   // The server hashes attacker-controllable query input before validating, so a malformed
   // string must not throw here; fall back to the raw value (matching the hash on both ends).
