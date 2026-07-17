@@ -203,7 +203,7 @@ declare module '@nuxt/schema' {
   interface RuntimeConfig {
     app: NitroRuntimeConfigApp
     /** Only available on the server. */
-    nitro?: NitroRuntimeConfig['"nitro"']
+    nitro?: NitroRuntimeConfig['nitro']
   }
 
   interface NuxtDebugOptions {
@@ -320,7 +320,7 @@ declare module 'nuxt/schema' {
   interface RuntimeConfig {
     app: NitroRuntimeConfigApp
     /** Only available on the server. */
-    nitro?: NitroRuntimeConfig['"nitro"']
+    nitro?: NitroRuntimeConfig['nitro']
   }
 
   interface NuxtDebugOptions {
