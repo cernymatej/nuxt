@@ -1,6 +1,6 @@
 import { performance } from 'node:perf_hooks'
 import { pathToFileURL } from 'node:url'
-import { existsSync, promises as fsp, readFileSync } from 'node:fs'
+import { existsSync, promises as fsp, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { cpus } from 'node:os'
 import process from 'node:process'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
@@ -1032,11 +1032,20 @@ export async function bundle (nuxt: Nuxt & { _nitro?: Nitro }): Promise<void> {
   let waitUntilCompile: Promise<void> | undefined
   if (nuxt.options.dev) {
     let nitroBuilt = false
+    // nitropack re-parses inlined virtual modules on every dev build; the
+    // webpack/rspack SSR bundle is large enough that this dominates build time, so
+    // persist it to disk and keep it external to the rollup graph instead.
+    const diskServerEntry = join(nuxt.options.buildDir, 'dist/server/server.dev.mjs')
+    nitro.options.rollupConfig = defu(nitro.options.rollupConfig, { external: [/server\.dev\.mjs/] })
     for (const builder of ['webpack', 'rspack'] as const) {
       nuxt.hook(`${builder}:compile`, ({ name, compiler }) => {
         if (name === 'server') {
           const memfs = compiler.outputFileSystem as typeof import('node:fs')
-          nitro.options.virtual['nuxt/entry'] = () => memfs.readFileSync(join(nuxt.options.buildDir, 'dist/server/server.mjs'), 'utf-8')
+          nitro.options.virtual['nuxt/entry'] = () => {
+            mkdirSync(join(nuxt.options.buildDir, 'dist/server'), { recursive: true })
+            writeFileSync(diskServerEntry, memfs.readFileSync(join(nuxt.options.buildDir, 'dist/server/server.mjs'), 'utf-8'))
+            return `export { default } from ${JSON.stringify(pathToFileURL(diskServerEntry).href + '?v=' + Date.now())}`
+          }
         }
       })
       nuxt.hook(`${builder}:compiled`, () => {
