@@ -2809,7 +2809,7 @@ describe('lazy import components', () => {
   }
 
   describe.each(Object.entries(hydrationTests))('delayed hydration components %s', (description, path) => {
-    itFailsIf(isWebpack && isDev && description === 'in template')('lazy load delayed hydration comps at the right time', { timeout: 20_000 }, async () => {
+    it('lazy load delayed hydration comps at the right time', { timeout: 20_000 }, async () => {
       const html = await $fetch<string>(`/lazy-import-components/delayed-hydration${path}`)
 
       const hydratedText = 'This is mounted.'
@@ -2844,7 +2844,7 @@ describe('lazy import components', () => {
       await page.close()
     })
 
-    itFailsIf(isWebpack && isDev && description === 'in template')('respects custom delayed hydration triggers and overrides defaults', async () => {
+    it('respects custom delayed hydration triggers and overrides defaults', async () => {
       const { page } = await renderPage(`/lazy-import-components/delayed-hydration${path}`)
 
       const unhydratedText = 'This is not mounted.'
@@ -2917,7 +2917,7 @@ describe('lazy import components', () => {
       await page.close()
     })
 
-    itFailsIf(isWebpack && isDev && description === 'in template')('emits hydration events', async () => {
+    it('emits hydration events', async () => {
       const { page, consoleLogs } = await renderPage(`/lazy-import-components/delayed-hydration${path}/model-event`)
 
       const initialLogs = consoleLogs.filter(log => log.type === 'log' && log.text === 'Component hydrated')
