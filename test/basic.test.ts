@@ -1359,6 +1359,7 @@ describe('layouts', () => {
     expect(html).toContain('with-dynamic-layout')
     expect(html).toContain('Custom Layout:')
     expect(html).toContain('set from sets-layouts middleware')
+    expect(html).toContain('middleware layout: custom')
     await expectNoClientErrors('/with-dynamic-layout')
   })
   it.skipIf(!runsOnceInMatrix)('should work with a computed layout', async () => {
