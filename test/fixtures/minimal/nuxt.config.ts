@@ -27,6 +27,7 @@ export default defineNuxtConfig({
   compatibilityDate: 'latest',
   nitro: {
     output: { dir: fileURLToPath(new URL(testWithInlineVue ? './.output-inline' : './.output', import.meta.url)) },
+    minify: true,
   },
   typescript: {
     typeCheck: 'build',
