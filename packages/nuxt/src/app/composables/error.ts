@@ -6,6 +6,7 @@ import { useNuxtApp } from '../nuxt'
 import type { NuxtApp, NuxtPayload } from '../nuxt'
 import { isBotUserAgent } from '../utils'
 import { useRouter } from './router'
+import { appDiagnostics } from '../diagnostics/core.ts'
 
 export const NUXT_ERROR_SIGNATURE = '__nuxt_error' as const
 
@@ -59,7 +60,7 @@ export const showError = <DataT = unknown>(
  */
 export const _notifyCrawlerError = (nuxtApp: NuxtApp, error: Error): Promise<void> | void => {
   const result = nuxtApp.callHook('app:error', createError(error))
-  console.error(`[nuxt] Not rendering error page for bot with user agent \`${navigator.userAgent}\`:`, error)
+  appDiagnostics.NUXT_E1012({ userAgent: navigator.userAgent, cause: error })
   return result
 }
 

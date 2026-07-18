@@ -8,6 +8,7 @@ import { useHead } from './head'
 
 import { useRoute } from './router'
 import { getAppManifest, getRouteRules } from './manifest'
+import { stateDiagnostics } from '../diagnostics/state.ts'
 
 import { appId, appManifest, multiApp, payloadExtraction, renderJsonPayloads } from '#build/nuxt.config.mjs'
 
@@ -79,7 +80,7 @@ const filename = renderJsonPayloads ? '_payload.json' : '_payload.js'
 async function _getPayloadURL (url: string, opts: LoadPayloadOptions = {}) {
   const u = new URL(url, 'http://localhost')
   if (u.host !== 'localhost' || hasProtocol(u.pathname, { acceptRelative: true })) {
-    throw new Error('Payload URL must not include hostname: ' + url)
+    throw stateDiagnostics.NUXT_E7001({ url })
   }
   const config = useRuntimeConfig()
   const hash = opts.hash || (opts.fresh || import.meta.dev ? Date.now() : config.app.buildId)
@@ -95,7 +96,7 @@ async function _importPayload (payloadURL: string) {
       const res = await fetch(payloadURL, import.meta.dev ? {} : { cache: 'force-cache' })
       if (!res.ok) {
         if (import.meta.dev) {
-          console.warn(`[nuxt] Cannot load payload ${payloadURL}: ${res.status} ${res.statusText}`)
+          stateDiagnostics.NUXT_E7002({ url: payloadURL })
         }
         return null
       }
@@ -104,7 +105,7 @@ async function _importPayload (payloadURL: string) {
       return await import(/* webpackIgnore: true */ /* @vite-ignore */ payloadURL).then(r => r.default || r)
     }
   } catch (err) {
-    console.warn('[nuxt] Cannot load payload ', payloadURL, err)
+    stateDiagnostics.NUXT_E7002({ url: payloadURL, cause: err })
   }
   return null
 }
@@ -226,7 +227,7 @@ export function definePayloadReviver (
   revive: (data: any) => any | undefined,
 ): void {
   if (import.meta.dev && getCurrentInstance()) {
-    console.warn('[nuxt] [definePayloadReviver] This function must be called in a Nuxt plugin that is `unshift`ed to the beginning of the Nuxt plugins array.')
+    stateDiagnostics.NUXT_E7004()
   }
   if (import.meta.client) {
     useNuxtApp()._payloadRevivers[name] = revive

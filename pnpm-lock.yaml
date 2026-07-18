@@ -268,6 +268,9 @@ importers:
       mlly:
         specifier: ^1.8.2
         version: 1.8.2
+      nostics:
+        specifier: ^1.1.4
+        version: 1.1.4
       ohash:
         specifier: ^2.0.11
         version: 2.0.11
@@ -380,6 +383,9 @@ importers:
       nitropack:
         specifier: ^2.13.4
         version: 2.13.4(@rspack/core@2.1.4(@swc/helpers@0.5.23))(oxc-parser@0.140.0)(rolldown@1.2.0)(srvx@0.11.22)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
+      nostics:
+        specifier: ^1.1.4
+        version: 1.1.4
       nypm:
         specifier: ^0.6.8
         version: 0.6.8
@@ -528,6 +534,9 @@ importers:
       nanotar:
         specifier: ^0.3.0
         version: 0.3.0
+      nostics:
+        specifier: ^1.1.4
+        version: 1.1.4
       nypm:
         specifier: ^0.6.8
         version: 0.6.8
@@ -818,6 +827,9 @@ importers:
       defu:
         specifier: ^6.1.7
         version: 6.1.7
+      nostics:
+        specifier: ^1.1.4
+        version: 1.1.4
       pathe:
         specifier: ^2.0.3
         version: 2.0.3

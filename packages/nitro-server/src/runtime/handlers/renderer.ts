@@ -22,6 +22,7 @@ import { renderPayloadJsonScript, renderPayloadResponse, renderPayloadScript, sp
 import { createSSRContext, setSSRError } from '../utils/renderer/app'
 import { renderInlineStyles } from '../utils/renderer/inline-styles'
 import { renderStreamedIslandTeleports, replaceIslandTeleports } from '../utils/renderer/islands'
+import { serverDiagnostics } from '../diagnostics'
 import { renderSSRHeadOptions } from '#internal/unhead.config.mjs'
 import { NUXT_ASYNC_CONTEXT, NUXT_EARLY_HINTS, NUXT_INLINE_STYLES, NUXT_JSON_PAYLOADS, NUXT_NO_SCRIPTS, NUXT_PAYLOAD_EXTRACTION, NUXT_PAYLOAD_INLINE, NUXT_RUNTIME_PAYLOAD_EXTRACTION, NUXT_SSR_STREAMING, NUXT_SSR_STREAMING_BOT_RE, PARSE_ERROR_DATA } from '#internal/nuxt/nitro-config.mjs'
 import { appHead, appTeleportAttrs, appTeleportTag, componentIslands, componentIslandsActive, tracingChannelNuxt } from '#internal/nuxt.config.mjs'
@@ -560,7 +561,7 @@ async function renderStreamedResponse (ctx: {
     const initialAppendLen = shellContext.bodyAppend.length
     await nitroApp.hooks.callHook('render:html', shellContext, { event, streaming: true })
     if (shellContext.body.length !== initialBodyLen || shellContext.bodyAppend.length !== initialAppendLen) {
-      console.warn(`[nuxt] \`render:html\` mutated \`body\`/\`bodyAppend\` while streaming (${event.path}). These fields are silently dropped because the body is about to stream - use the \`render:html:close\` hook instead.`)
+      serverDiagnostics.NUXT_E8001({ path: event.path })
     }
   } else {
     await nitroApp.hooks.callHook('render:html', shellContext, { event, streaming: true })
@@ -784,9 +785,7 @@ async function renderStreamedResponse (ctx: {
             lateMutations.push(`response headers changed during render (e.g. \`useCookie\`, \`useResponseHeader\`, \`setHeader\`)`)
           }
           if (lateMutations.length) {
-            console.warn(
-              `[nuxt] SSR streaming committed the response before render completed. The following mutations did not reach the client and were dropped:\n  - ${lateMutations.join('\n  - ')}\n  Path: ${event.path}\n  Move the mutation into a plugin (which runs before the shell is flushed), or opt this route out of streaming with \`routeRules: { '${event.path}': { streaming: false } }\` or the \`render:route\` hook.`,
-            )
+            serverDiagnostics.NUXT_E8002({ mutations: lateMutations.join('\n  - '), path: event.path })
           }
         }
       } catch (error) {

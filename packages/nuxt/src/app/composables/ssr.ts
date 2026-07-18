@@ -7,6 +7,7 @@ import { $fetch as _$fetch } from '#build/fetch'
 import type { NuxtApp } from '../nuxt'
 import { useNuxtApp } from '../nuxt'
 import { toArray } from '../utils'
+import { appDiagnostics } from '../diagnostics/core.ts'
 import { useHead } from './head'
 
 const $fetch = _$fetch as $Fetch
@@ -74,7 +75,7 @@ export function useResponseHeader (header: string): import('vue').WritableComput
     if (import.meta.dev) {
       return computed({
         get: () => undefined,
-        set: () => console.warn('[nuxt] Setting response headers is not supported in the browser.'),
+        set: () => appDiagnostics.NUXT_E1010(),
       })
     }
     return ref()
@@ -121,7 +122,7 @@ export function onPrehydrate (callback: string | ((el: HTMLElement) => void), ke
   if (import.meta.client) { return }
 
   if (typeof callback !== 'string') {
-    throw new TypeError('[nuxt] To transform a callback into a string, `onPrehydrate` must be processed by the Nuxt build pipeline. If it is called in a third-party library, make sure to add the library to `build.transpile`.')
+    throw appDiagnostics.NUXT_E1006()
   }
 
   const vm = getCurrentInstance()

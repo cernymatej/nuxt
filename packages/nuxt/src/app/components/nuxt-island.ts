@@ -13,6 +13,7 @@ import { prerenderRoutes, useRequestEvent } from '../composables/ssr'
 import { injectHead } from '../composables/head'
 import { getFragmentHTML, isEndFragment, isStartFragment } from './utils'
 import { getIslandHash, serializeIslandProps } from '../island-hash'
+import { renderDiagnostics } from '../diagnostics/render.ts'
 
 import { appBaseURL, remoteComponentIslands, selectiveClient } from '#build/nuxt.config.mjs'
 
@@ -155,7 +156,7 @@ const NuxtIsland = defineComponent({
         while (currentEl) {
           if (isEndFragment(currentEl)) {
             if (startEl !== currentEl.previousSibling) {
-              console.warn(`[\`Server components(and islands)\`] "${props.name}" must have a single root element. (HTML comments are considered elements as well.)`)
+              renderDiagnostics.NUXT_E4005({ name: props.name })
             }
             break
           } else if (!isStartFragment(currentEl) && isFirstElement) {
@@ -239,7 +240,7 @@ const NuxtIsland = defineComponent({
         return result
       } catch (e: any) {
         if (r.status !== 200) {
-          throw new Error(e.toString(), { cause: e })
+          throw renderDiagnostics.NUXT_E4012({ name: props.name, status: r.status, detail: e.message, cause: e })
         }
         throw e
       }
