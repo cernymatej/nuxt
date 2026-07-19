@@ -114,6 +114,7 @@ export default defineConfig({
           name: fixtureProjectName(entry),
           include: ['test/*.test.ts'],
           exclude: [...fixtureExclude, 'test/bundle.test.ts'],
+          globalSetup: ['./test/setup-prepare.ts'],
           setupFiles: ['./test/setup-env.ts'],
           testTimeout: isWindows ? 60000 : 20000,
           retry: isCI ? 2 : 0,
@@ -125,6 +126,7 @@ export default defineConfig({
         test: {
           name: 'bundle',
           include: ['test/bundle.test.ts'],
+          globalSetup: ['./test/setup-prepare.ts'],
           setupFiles: ['./test/setup-env.ts'],
           testTimeout: 180_000,
           retry: isCI ? 2 : 0,
