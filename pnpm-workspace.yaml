@@ -48,6 +48,7 @@ minimumReleaseAgeExclude:
   - undici@8.5.0
   - unctx@3.0.0
   - magic-string@1.0.0
+  - verkit@0.1.2
 
 catalogs:
   app-runtime:
@@ -168,6 +169,7 @@ catalogs:
     unplugin: ^3.3.0
     unrouting: ^0.1.7
     untyped: ^2.0.0
+    verkit: ^0.1.2
     vue-bundle-renderer: ^2.3.1
   dev:
     '@arethetypeswrong/cli': 0.18.5

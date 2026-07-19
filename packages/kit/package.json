@@ -40,15 +40,14 @@
     "pkg-types": "catalog:build",
     "rc9": "catalog:build",
     "scule": "catalog:build",
-    "semver": "^7.8.5",
     "tinyglobby": "catalog:build",
     "ufo": "catalog:build",
     "unctx": "catalog:build",
-    "untyped": "catalog:build"
+    "untyped": "catalog:build",
+    "verkit": "catalog:build"
   },
   "devDependencies": {
     "@nuxt/schema": "workspace:*",
-    "@types/semver": "7.7.1",
     "hookable": "catalog:app-runtime",
     "nitro": "catalog:nitro-runtime",
     "nitropack": "catalog:dev",

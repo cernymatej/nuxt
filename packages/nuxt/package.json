@@ -123,7 +123,6 @@
     "rolldown-string": "catalog:vite",
     "rou3": "^0.9.1",
     "scule": "catalog:build",
-    "semver": "^7.8.5",
     "std-env": "catalog:build",
     "tinyglobby": "catalog:build",
     "ufo": "catalog:app-runtime",
@@ -136,6 +135,7 @@
     "unplugin": "catalog:build",
     "unrouting": "catalog:build",
     "untyped": "catalog:build",
+    "verkit": "catalog:build",
     "vue": "catalog:app-runtime",
     "vue-router": "catalog:app-runtime"
   },
