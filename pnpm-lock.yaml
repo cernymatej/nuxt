@@ -1360,6 +1360,28 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/nuxt
 
+  test/fixtures/chunk-error:
+    dependencies:
+      nuxt:
+        specifier: workspace:*
+        version: link:../../../packages/nuxt
+    devDependencies:
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+
+  test/fixtures/dynamic-paths:
+    dependencies:
+      '@nuxt/rspack-builder':
+        specifier: workspace:*
+        version: link:../../../packages/rspack
+      '@nuxt/webpack-builder':
+        specifier: workspace:*
+        version: link:../../../packages/webpack
+      nuxt:
+        specifier: workspace:*
+        version: link:../../../packages/nuxt
+
   test/fixtures/hmr:
     dependencies:
       nuxt:
