@@ -522,7 +522,7 @@ export const dollarFetchTemplate: NuxtTemplate = {
 export const dollarFetchTypeTemplate: NuxtTemplate = {
   filename: 'fetch.d.ts',
   getContents () {
-    return 'export { $fetch } from \'ofetch\'\n'
+    return 'export declare const $fetch: import(\'nitropack/types\').$Fetch\n'
   },
 }
 
