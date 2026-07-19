@@ -3,7 +3,7 @@ import { createVNode, defineComponent, onErrorCaptured } from 'vue'
 
 import { createError } from '../composables/error'
 import { useRoute } from '../composables/router'
-import { renderDiagnostics } from '../diagnostics/render.ts'
+import { renderDiagnostics } from '../diagnostics/render'
 
 import { islandComponents, pageIslandRoutes, providePageIslandDepth } from '#build/components.islands.mjs'
 
