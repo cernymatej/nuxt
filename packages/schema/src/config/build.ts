@@ -74,7 +74,7 @@ export default defineResolvers({
     },
   },
   optimization: {
-    keyedComposables: {
+    keyedFunctions: {
       $resolve: val => [
         { name: 'callOnce', argumentLength: 3, source: '#app/composables/once' },
         { name: 'defineNuxtComponent', argumentLength: 2, source: '#app/composables/component' },
@@ -86,7 +86,7 @@ export default defineResolvers({
         ...Array.isArray(val) ? val : [],
       ].filter(Boolean),
     },
-    keyedComposableFactories: {
+    keyedFunctionFactories: {
       $resolve: val => [
         {
           name: 'createUseFetch',

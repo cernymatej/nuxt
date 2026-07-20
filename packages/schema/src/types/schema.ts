@@ -512,13 +512,13 @@ export interface ConfigSchema {
      * The key will be unique based on the location of the function being invoked within the file.
      *
      */
-    keyedComposables: KeyedFunction[]
+    keyedFunctions: KeyedFunction[]
     /**
      * Factories for functions that should be registered for automatic key injection.
      *
-     * @see keyedComposables
+     * @see keyedFunctions
      */
-    keyedComposableFactories: KeyedFunctionFactory[]
+    keyedFunctionFactories: KeyedFunctionFactory[]
 
     /**
      * Tree shake code from specific builds.

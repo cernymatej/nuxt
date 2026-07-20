@@ -32,7 +32,7 @@ export default defineNuxtModule<Partial<NuxtCompilerOptions>>({
     nuxt.hook('build:before', async () => {
       // Replace keyed function factory compiler macro placeholders with actual factories.
       addBuildPlugin(KeyedFunctionFactoriesPlugin({
-        factories: nuxt.options.optimization.keyedComposableFactories,
+        factories: nuxt.options.optimization.keyedFunctionFactories,
         alias: nuxt.options.alias,
         getAutoImports: () => unimport?.getImports() || Promise.resolve([]),
       }))
@@ -40,7 +40,7 @@ export default defineNuxtModule<Partial<NuxtCompilerOptions>>({
       // Scan user composables directories for factory-created keyed functions
       if (_options.scan) {
         const scanPlugin = KeyedFunctionFactoriesScanPlugin({
-          factories: nuxt.options.optimization.keyedComposableFactories,
+          factories: nuxt.options.optimization.keyedFunctionFactories,
           alias: nuxt.options.alias,
         })
         scanResult = scanPlugin.result
@@ -49,7 +49,7 @@ export default defineNuxtModule<Partial<NuxtCompilerOptions>>({
 
       // Add keys for useFetch, useAsyncData, etc.
       // Maintained as a mutable list so HMR can add/remove entries
-      normalizedKeyedFunctions = await Promise.all(nuxt.options.optimization.keyedComposables.map(async ({ source, ...rest }) => ({
+      normalizedKeyedFunctions = await Promise.all(nuxt.options.optimization.keyedFunctions.map(async ({ source, ...rest }) => ({
         ...rest,
         source: await resolvePath(source, { fallbackToOriginal: true }),
       })))
