@@ -320,9 +320,6 @@ catalogs:
     '@vue/compiler-core':
       specifier: 3.5.39
       version: 3.5.39
-    '@vue/devtools-api':
-      specifier: ^8.1.2
-      version: 8.1.5
     '@vue/language-core':
       specifier: 3.3.7
       version: 3.3.7
@@ -438,9 +435,6 @@ catalogs:
     destr:
       specifier: ^2.0.5
       version: 2.0.5
-    nitro:
-      specifier: 3.0.260311-beta
-      version: 3.0.260311-beta
     srvx:
       specifier: 0.11.22
       version: 0.11.22
@@ -558,6 +552,7 @@ overrides:
 
 patchedDependencies:
   changelogen: 8aee9e31504b2889cfb6b9bae91ba797bea8acef312c723134cb1e70cc7e4c2b
+  knip@6.27.0: 1ba9a7d6e9ab2a13375caa1c61d26951ad4e8de983d62372678133b04d547d3d
 
 importers:
 
@@ -569,9 +564,6 @@ importers:
       '@babel/core':
         specifier: catalog:dev
         version: 8.0.1
-      '@babel/helper-plugin-utils':
-        specifier: 8.0.1
-        version: 8.0.1(@babel/core@8.0.1)
       '@codspeed/core':
         specifier: catalog:dev
         version: 5.7.1
@@ -611,9 +603,6 @@ importers:
       '@types/babel__core':
         specifier: catalog:dev
         version: 7.20.5
-      '@types/babel__helper-plugin-utils':
-        specifier: 7.10.3
-        version: 7.10.3
       '@types/node':
         specifier: catalog:dev
         version: 24.13.3
@@ -650,9 +639,6 @@ importers:
       defu:
         specifier: catalog:build
         version: 6.1.7
-      destr:
-        specifier: 2.0.5
-        version: 2.0.5
       devalue:
         specifier: catalog:app-runtime
         version: 5.8.1
@@ -671,9 +657,6 @@ importers:
       eslint-typegen:
         specifier: catalog:dev
         version: 2.3.1(eslint@10.7.0(jiti@2.7.0))
-      estree-walker:
-        specifier: 3.0.3
-        version: 3.0.3
       get-port-please:
         specifier: catalog:build
         version: 3.2.0
@@ -683,24 +666,21 @@ importers:
       happy-dom:
         specifier: catalog:dev
         version: 20.10.6
+      hookable:
+        specifier: catalog:app-runtime
+        version: 6.1.1
       installed-check:
         specifier: catalog:dev
         version: 10.0.1
       knip:
         specifier: catalog:dev
-        version: 6.27.0
+        version: 6.27.0(patch_hash=1ba9a7d6e9ab2a13375caa1c61d26951ad4e8de983d62372678133b04d547d3d)
       magic-regexp:
         specifier: catalog:dev
         version: 0.11.0(@rspack/core@2.1.4(@swc/helpers@0.5.23))(esbuild@0.28.1)(rolldown@1.2.0)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
-      magic-string:
-        specifier: 1.0.0
-        version: 1.0.0
       markdownlint-cli:
         specifier: catalog:dev
         version: 0.49.1
-      memfs:
-        specifier: 4.64.0
-        version: 4.64.0(tslib@2.8.1)
       nitropack:
         specifier: 2.13.4
         version: 2.13.4(@rspack/core@2.1.4(@swc/helpers@0.5.23))(oxc-parser@0.140.0)(rolldown@1.2.0)(srvx@0.11.22)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
@@ -722,9 +702,6 @@ importers:
       playwright-core:
         specifier: catalog:dev
         version: 1.61.1
-      rolldown-string:
-        specifier: 0.3.0
-        version: 0.3.0(rolldown@1.2.0)
       rollup:
         specifier: catalog:dev
         version: 4.62.2
@@ -743,9 +720,6 @@ importers:
       tinyglobby:
         specifier: catalog:build
         version: 0.2.17
-      ts-blank-space:
-        specifier: 0.9.0
-        version: 0.9.0
       typescript:
         specifier: catalog:dev
         version: 6.0.3
@@ -767,6 +741,9 @@ importers:
       vue:
         specifier: 3.5.39
         version: 3.5.39(typescript@6.0.3)
+      vue-router:
+        specifier: catalog:app-runtime
+        version: 5.2.0(@rspack/core@2.1.4(@swc/helpers@0.5.23))(@vue/compiler-sfc@3.5.39)(esbuild@0.28.1)(rolldown@1.2.0)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
       vue-tsc:
         specifier: catalog:dev
         version: 3.3.7(typescript@6.0.3)
@@ -848,9 +825,6 @@ importers:
       hookable:
         specifier: catalog:app-runtime
         version: 6.1.1
-      nitro:
-        specifier: catalog:nitro-runtime
-        version: 3.0.260311-beta(chokidar@5.0.0)(dotenv@17.4.2)(giget@3.3.0)(ioredis@5.11.1)(jiti@2.7.0)(lru-cache@11.5.1)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))
       nitropack:
         specifier: catalog:dev
         version: 2.13.4(@rspack/core@2.1.4(@swc/helpers@0.5.23))(oxc-parser@0.140.0)(rolldown@1.2.0)(srvx@0.11.22)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
@@ -1165,9 +1139,6 @@ importers:
       '@nuxt/scripts':
         specifier: catalog:dev
         version: 1.3.1(@rspack/core@2.1.4(@swc/helpers@0.5.23))(@unhead/vue@3.1.8(@rspack/core@2.1.4(@swc/helpers@0.5.23))(crossws@0.4.6(srvx@0.11.22))(esbuild@0.28.1)(lightningcss@1.32.0)(rolldown@1.2.0)(rollup@4.62.2)(typescript@6.0.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19)))(db0@0.3.4)(esbuild@0.28.1)(ioredis@5.11.1)(rolldown@1.2.0)(rollup@4.62.2)(typescript@6.0.3)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(vue@3.5.39(typescript@6.0.3))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
-      '@oxc-project/types':
-        specifier: 0.140.0
-        version: 0.140.0
       '@parcel/watcher':
         specifier: catalog:dev
         version: 2.5.6
@@ -1425,9 +1396,6 @@ importers:
       esbuild-loader:
         specifier: catalog:webpack
         version: 4.5.0(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
-      file-loader:
-        specifier: 6.2.0
-        version: 6.2.0(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
       h3:
         specifier: catalog:dev
         version: 1.15.11
@@ -1452,9 +1420,6 @@ importers:
       rollup-plugin-visualizer:
         specifier: catalog:dev
         version: 7.0.1(rolldown@1.2.0)(rollup@4.62.2)
-      sass-loader:
-        specifier: 17.0.0
-        version: 17.0.0(@rspack/core@2.1.4(@swc/helpers@0.5.23))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
       scule:
         specifier: catalog:build
         version: 1.3.0
@@ -1765,9 +1730,6 @@ importers:
       time-fix-plugin:
         specifier: catalog:webpack
         version: 2.0.7(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19))
-      tinyglobby:
-        specifier: ^0.2.17
-        version: 0.2.17
       ufo:
         specifier: catalog:build
         version: 1.6.4
@@ -1849,7 +1811,7 @@ importers:
         version: link:../../../packages/nuxt
     devDependencies:
       '@vue/devtools-api':
-        specifier: catalog:dev
+        specifier: ^8.1.2
         version: 8.1.5
       defu:
         specifier: catalog:build
@@ -4139,9 +4101,6 @@ packages:
   '@types/babel__generator@7.27.0':
     resolution: {integrity: sha512-ufFd2Xi92OAVPYsy+P4n7/U7e68fex0+Ee8gSG9KX7eo084CWiQ4sdxktvdl0bOPupXtVJPY19zk6EwWqUQ8lg==}
 
-  '@types/babel__helper-plugin-utils@7.10.3':
-    resolution: {integrity: sha512-FcLBBPXInqKfULB2nvOBskQPcnSMZ0s1Y2q76u9H1NPPWaLcTeq38xBeKfF/RBUECK333qeaqRdYoPSwW7rTNQ==}
-
   '@types/babel__template@7.4.4':
     resolution: {integrity: sha512-h/NUaSyG5EyxBIp8YRxo4RMe2/qQgvyowRwVMzhYhBCONbW8PUsg4lkFMrhgZhUe5z3L3MiLDuvyJ/CaPa2A8A==}
 
@@ -5938,24 +5897,6 @@ packages:
     resolution: {integrity: sha512-+h1lkLKhZMTYjog1VEpJNG7NZJWcuc2DDk/qsqSTRRCOXiLjeQ1d1/udrUGhqMxUgAlwKNZ0cf2uqan5GLuS2A==}
     engines: {node: '>=6'}
 
-  env-runner@0.1.14:
-    resolution: {integrity: sha512-qdk5mmgFsd+zPg3r1bkZ+IbvpfUfypyDvNhMGypSMRpz7kOa/kI6SpW8fgyukuEM4Lo24M65r+1Ne0DtT7vFBA==}
-    hasBin: true
-    peerDependencies:
-      '@netlify/runtime': ^4.1.23
-      '@vercel/queue': ^0.2.0
-      miniflare: ^4.20260515.0
-      wrangler: ^4.0.0
-    peerDependenciesMeta:
-      '@netlify/runtime':
-        optional: true
-      '@vercel/queue':
-        optional: true
-      miniflare:
-        optional: true
-      wrangler:
-        optional: true
-
   environment@1.1.0:
     resolution: {integrity: sha512-xUtoPkMggbz0MPyPiIWr1Kp4aeWJjDZ6SMvURhimjdZgsRuDplF5/s9hcgGhyXMhs+6vpnuoiZ2kFiu3FMnS8Q==}
     engines: {node: '>=18'}
@@ -7666,37 +7607,6 @@ packages:
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  nf3@0.3.17:
-    resolution: {integrity: sha512-N9zEWySuJFw+gR0lhS5863YsvNeudOdqRyFvNb+jMXbeTJOdrjDqkCpDginIZfUm0LzT1t1nCRiDeqQm/8kirQ==}
-
-  nitro@3.0.260311-beta:
-    resolution: {integrity: sha512-0o0fJ9LUh4WKUqJNX012jyieUOtMCnadkNDWr0mHzdraoHpJP/1CGNefjRyZyMXSpoJfwoWdNEZu2iGf35TUvQ==}
-    engines: {node: ^20.19.0 || >=22.12.0}
-    hasBin: true
-    peerDependencies:
-      dotenv: '*'
-      giget: '*'
-      jiti: ^2.6.1
-      rollup: ^4.59.0
-      vite: 8.1.4
-      xml2js: ^0.6.2
-      zephyr-agent: ^0.1.15
-    peerDependenciesMeta:
-      dotenv:
-        optional: true
-      giget:
-        optional: true
-      jiti:
-        optional: true
-      rollup:
-        optional: true
-      vite:
-        optional: true
-      xml2js:
-        optional: true
-      zephyr-agent:
-        optional: true
-
   nitropack@2.13.4:
     resolution: {integrity: sha512-tX7bT6zxNeMwkc6hxHiZeUoTOjVrcjoh1Z3cmxOlodIqjl4HISgqfGOmkWSayky3Nv9Z5+KQH52F8nmXJY5AAA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -7823,9 +7733,6 @@ packages:
   obug@2.1.3:
     resolution: {integrity: sha512-9miFgM2OFba7hB+pRgvtV84pYTBaoTHohvmIgiRt6dRIzbwEOIaNaP+dIlGs2fNFoB0SeISs0Jz5WFVRid6Xyg==}
     engines: {node: '>=12.20.0'}
-
-  ocache@0.1.5:
-    resolution: {integrity: sha512-kNNnkkVQup/QDvmTz8Q84wc2ntiyoVHDxa6eHWKt5qdGAmFRBIxy83rxgCYEjW0x06UJ9E3P6VgM2yY4rOBH4w==}
 
   ofetch@1.5.1:
     resolution: {integrity: sha512-2W4oUZlVaqAPAil6FUg/difl6YhqhUR7x2eZY4bQCko22UXg3hptq9KLQdqFClV+Wu85UX7hNtdGTngi/1BxcA==}
@@ -8845,24 +8752,6 @@ packages:
     resolution: {integrity: sha512-x/+Cz4YrimQxQccJf5mKEbIa1NzeCRNI5Ecl/ekmlYaampdNLPalVyIcCZNNH3MvmqBugV5TMYZXv0ljslUlaw==}
     engines: {node: '>= 0.4'}
 
-  sass-loader@17.0.0:
-    resolution: {integrity: sha512-0Ybm8ohBQ9LcrycVrFQp/KQBNX5a3Wda9/smS0mE/xLffzEnwvV8nykOzrbiSWNzTE3IB/jiXx8O4QmDPG2+Gw==}
-    engines: {node: '>= 22.11.0'}
-    peerDependencies:
-      '@rspack/core': 0.x || ^1.0.0 || ^2.0.0-0
-      sass: ^1.3.0
-      sass-embedded: '*'
-      webpack: ^5.0.0
-    peerDependenciesMeta:
-      '@rspack/core':
-        optional: true
-      sass:
-        optional: true
-      sass-embedded:
-        optional: true
-      webpack:
-        optional: true
-
   sax@1.6.0:
     resolution: {integrity: sha512-6R3J5M4AcbtLUdZmRv2SygeVaM7IhrLXu9BmnOGmmACak8fiUtOsYNWUS4uK7upbmHIBbLBeFeI//477BKLBzA==}
     engines: {node: '>=11.0.0'}
@@ -9326,10 +9215,6 @@ packages:
     peerDependencies:
       typescript: '>=4.8.4'
 
-  ts-blank-space@0.9.0:
-    resolution: {integrity: sha512-TU6coIZm6RxGgAjroRKmi6aCQ7Pq7cT+1I+bTKBepD6joOuWqUCOptVlz+eurqTnatnQOimlR8XB5sQZ6ULwbw==}
-    engines: {node: '>=18.0.0'}
-
   ts-checker-rspack-plugin@1.5.2:
     resolution: {integrity: sha512-YtdNbLnJ9fU6itfQky0K9Lebb/N0TUSbSVUByyoGt27em3hiTCVnfW2MzxFUHpdMv5+7xPmoS8YBwdDyHfEaGQ==}
     peerDependencies:
@@ -9677,80 +9562,6 @@ packages:
       idb-keyval:
         optional: true
       ioredis:
-        optional: true
-      uploadthing:
-        optional: true
-
-  unstorage@2.0.0-alpha.7:
-    resolution: {integrity: sha512-ELPztchk2zgFJnakyodVY3vJWGW9jy//keJ32IOJVGUMyaPydwcA1FtVvWqT0TNRch9H+cMNEGllfVFfScImog==}
-    peerDependencies:
-      '@azure/app-configuration': ^1.11.0
-      '@azure/cosmos': ^4.9.1
-      '@azure/data-tables': ^13.3.2
-      '@azure/identity': ^4.13.0
-      '@azure/keyvault-secrets': ^4.10.0
-      '@azure/storage-blob': ^12.31.0
-      '@capacitor/preferences': ^6 || ^7 || ^8
-      '@deno/kv': '>=0.13.0'
-      '@netlify/blobs': ^6.5.0 || ^7.0.0 || ^8.1.0 || ^9.0.0 || ^10.0.0
-      '@planetscale/database': ^1.19.0
-      '@upstash/redis': ^1.36.2
-      '@vercel/blob': '>=0.27.3'
-      '@vercel/functions': ^2.2.12 || ^3.0.0
-      '@vercel/kv': ^1.0.1
-      aws4fetch: ^1.0.20
-      chokidar: ^4 || ^5
-      db0: '>=0.3.4'
-      idb-keyval: ^6.2.2
-      ioredis: ^5.9.3
-      lru-cache: ^11.2.6
-      mongodb: ^6 || ^7
-      ofetch: '*'
-      uploadthing: ^7.7.4
-    peerDependenciesMeta:
-      '@azure/app-configuration':
-        optional: true
-      '@azure/cosmos':
-        optional: true
-      '@azure/data-tables':
-        optional: true
-      '@azure/identity':
-        optional: true
-      '@azure/keyvault-secrets':
-        optional: true
-      '@azure/storage-blob':
-        optional: true
-      '@capacitor/preferences':
-        optional: true
-      '@deno/kv':
-        optional: true
-      '@netlify/blobs':
-        optional: true
-      '@planetscale/database':
-        optional: true
-      '@upstash/redis':
-        optional: true
-      '@vercel/blob':
-        optional: true
-      '@vercel/functions':
-        optional: true
-      '@vercel/kv':
-        optional: true
-      aws4fetch:
-        optional: true
-      chokidar:
-        optional: true
-      db0:
-        optional: true
-      idb-keyval:
-        optional: true
-      ioredis:
-        optional: true
-      lru-cache:
-        optional: true
-      mongodb:
-        optional: true
-      ofetch:
         optional: true
       uploadthing:
         optional: true
@@ -12319,10 +12130,6 @@ snapshots:
     dependencies:
       '@babel/types': 7.29.7
 
-  '@types/babel__helper-plugin-utils@7.10.3':
-    dependencies:
-      '@types/babel__core': 7.20.5
-
   '@types/babel__template@7.4.4':
     dependencies:
       '@babel/parser': 7.29.7
@@ -14320,13 +14127,6 @@ snapshots:
 
   env-paths@2.2.1: {}
 
-  env-runner@0.1.14:
-    dependencies:
-      crossws: 0.4.6(srvx@0.11.22)
-      exsolve: 1.1.0
-      httpxy: 0.5.3
-      srvx: 0.11.22
-
   environment@1.1.0: {}
 
   errno@0.1.8:
@@ -15609,7 +15409,7 @@ snapshots:
 
   klona@2.0.6: {}
 
-  knip@6.27.0:
+  knip@6.27.0(patch_hash=1ba9a7d6e9ab2a13375caa1c61d26951ad4e8de983d62372678133b04d547d3d):
     dependencies:
       fdir: 6.5.0(picomatch@4.0.5)
       formatly: 0.3.0
@@ -16378,63 +16178,6 @@ snapshots:
 
   neo-async@2.6.2: {}
 
-  nf3@0.3.17: {}
-
-  nitro@3.0.260311-beta(chokidar@5.0.0)(dotenv@17.4.2)(giget@3.3.0)(ioredis@5.11.1)(jiti@2.7.0)(lru-cache@11.5.1)(rollup@4.62.2)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)):
-    dependencies:
-      consola: 3.4.2
-      crossws: 0.4.6(srvx@0.11.22)
-      db0: 0.3.4
-      env-runner: 0.1.14
-      h3: 2.0.1-rc.25(crossws@0.4.6(srvx@0.11.22))
-      hookable: 6.1.1
-      nf3: 0.3.17
-      ocache: 0.1.5
-      ofetch: 2.0.0-alpha.3
-      ohash: 2.0.11
-      rolldown: 1.2.0
-      srvx: 0.11.22
-      unenv: 2.0.0-rc.24
-      unstorage: 2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4)(ioredis@5.11.1)(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3)
-    optionalDependencies:
-      dotenv: 17.4.2
-      giget: 3.3.0
-      jiti: 2.7.0
-      rollup: 4.62.2
-      vite: 8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0)
-    transitivePeerDependencies:
-      - '@azure/app-configuration'
-      - '@azure/cosmos'
-      - '@azure/data-tables'
-      - '@azure/identity'
-      - '@azure/keyvault-secrets'
-      - '@azure/storage-blob'
-      - '@capacitor/preferences'
-      - '@deno/kv'
-      - '@electric-sql/pglite'
-      - '@libsql/client'
-      - '@netlify/blobs'
-      - '@netlify/runtime'
-      - '@planetscale/database'
-      - '@upstash/redis'
-      - '@vercel/blob'
-      - '@vercel/functions'
-      - '@vercel/kv'
-      - '@vercel/queue'
-      - aws4fetch
-      - better-sqlite3
-      - chokidar
-      - drizzle-orm
-      - idb-keyval
-      - ioredis
-      - lru-cache
-      - miniflare
-      - mongodb
-      - mysql2
-      - sqlite3
-      - uploadthing
-      - wrangler
-
   nitropack@2.13.4(@rspack/core@2.1.4(@swc/helpers@0.5.23))(oxc-parser@0.140.0)(rolldown@1.2.0)(srvx@0.11.22)(vite@8.1.4(@types/node@24.13.3)(esbuild@0.28.1)(jiti@2.7.0)(terser@5.48.0)(yaml@2.9.0))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19)):
     dependencies:
       '@cloudflare/kv-asset-handler': 0.4.2
@@ -16671,10 +16414,6 @@ snapshots:
       object-keys: 1.1.1
 
   obug@2.1.3: {}
-
-  ocache@0.1.5:
-    dependencies:
-      ohash: 2.0.11
 
   ofetch@1.5.1:
     dependencies:
@@ -17862,11 +17601,6 @@ snapshots:
       es-errors: 1.3.0
       is-regex: 1.2.1
 
-  sass-loader@17.0.0(@rspack/core@2.1.4(@swc/helpers@0.5.23))(webpack@5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19)):
-    optionalDependencies:
-      '@rspack/core': 2.1.4(@swc/helpers@0.5.23)
-      webpack: 5.108.4(cssnano@8.0.2(postcss@8.5.19))(esbuild@0.28.1)(lightningcss@1.32.0)(postcss@8.5.19)
-
   sax@1.6.0: {}
 
   schema-utils@3.3.0:
@@ -18337,10 +18071,6 @@ snapshots:
     dependencies:
       typescript: 6.0.3
 
-  ts-blank-space@0.9.0:
-    dependencies:
-      typescript: 6.0.3
-
   ts-checker-rspack-plugin@1.5.2(@rspack/core@2.1.4(@swc/helpers@0.5.23))(tslib@2.8.1)(typescript@6.0.3):
     dependencies:
       '@rspack/lite-tapable': 1.1.2
@@ -18710,14 +18440,6 @@ snapshots:
     optionalDependencies:
       db0: 0.3.4
       ioredis: 5.11.1
-
-  unstorage@2.0.0-alpha.7(chokidar@5.0.0)(db0@0.3.4)(ioredis@5.11.1)(lru-cache@11.5.1)(ofetch@2.0.0-alpha.3):
-    optionalDependencies:
-      chokidar: 5.0.0
-      db0: 0.3.4
-      ioredis: 5.11.1
-      lru-cache: 11.5.1
-      ofetch: 2.0.0-alpha.3
 
   untun@0.1.3:
     dependencies:

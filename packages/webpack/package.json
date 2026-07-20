@@ -61,7 +61,6 @@
     "rolldown-string": "catalog:vite",
     "seroval": "catalog:build",
     "time-fix-plugin": "catalog:webpack",
-    "tinyglobby": "^0.2.17",
     "ufo": "catalog:build",
     "unenv": "catalog:build",
     "unplugin": "catalog:build",
