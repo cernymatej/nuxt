@@ -235,8 +235,8 @@ jobs:
           node-version: lts
           cache: true
 
-      - name: Build (stub)
-        run: vp run dev:prepare
+      - name: Prepare
+        run: vp run dev:prepare && vp run test:prepare
 
       - parallel:
           - name: Lint
