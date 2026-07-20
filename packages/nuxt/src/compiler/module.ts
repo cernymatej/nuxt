@@ -30,9 +30,16 @@ export default defineNuxtModule<Partial<NuxtCompilerOptions>>({
     let normalizedKeyedFunctions: KeyedFunction[] = []
 
     nuxt.hook('build:before', async () => {
+      // TODO: remove the merge with the deprecated option in Nuxt 5
+      const keyedFunctionFactories = [
+        ...nuxt.options.optimization.keyedFunctionFactories,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        ...nuxt.options.optimization.keyedComposableFactories,
+      ]
+
       // Replace keyed function factory compiler macro placeholders with actual factories.
       addBuildPlugin(KeyedFunctionFactoriesPlugin({
-        factories: nuxt.options.optimization.keyedComposableFactories,
+        factories: keyedFunctionFactories,
         alias: nuxt.options.alias,
         getAutoImports: () => unimport?.getImports() || Promise.resolve([]),
       }))
@@ -40,16 +47,23 @@ export default defineNuxtModule<Partial<NuxtCompilerOptions>>({
       // Scan user composables directories for factory-created keyed functions
       if (_options.scan) {
         const scanPlugin = KeyedFunctionFactoriesScanPlugin({
-          factories: nuxt.options.optimization.keyedComposableFactories,
+          factories: keyedFunctionFactories,
           alias: nuxt.options.alias,
         })
         scanResult = scanPlugin.result
         await runScanPlugins([scanPlugin])
       }
 
+      // TODO: remove the merge with the deprecated option in Nuxt 5
+      const keyedFunctions = [
+        ...nuxt.options.optimization.keyedFunctions,
+        // eslint-disable-next-line @typescript-eslint/no-deprecated
+        ...nuxt.options.optimization.keyedComposables,
+      ]
+
       // Add keys for useFetch, useAsyncData, etc.
       // Maintained as a mutable list so HMR can add/remove entries
-      normalizedKeyedFunctions = await Promise.all(nuxt.options.optimization.keyedComposables.map(async ({ source, ...rest }) => ({
+      normalizedKeyedFunctions = await Promise.all(keyedFunctions.map(async ({ source, ...rest }) => ({
         ...rest,
         source: typeof source === 'string' ? await resolvePath(source, { fallbackToOriginal: true }) : source,
       })))
