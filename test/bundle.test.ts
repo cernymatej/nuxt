@@ -121,10 +121,10 @@ describe.skipIf(process.env.SKIP_BUNDLE_SIZE === 'true' || process.env.ECOSYSTEM
     const serverDir = join(pagesRootDir, '.output/server')
 
     const serverStats = await analyzeSizes(['**/*.mjs', '!node_modules'], serverDir, pagesRootDir)
-    expect.soft(roundToKilobytes(serverStats.totalBytes)).toMatchInlineSnapshot(`"166k"`)
+    expect.soft(roundToKilobytes(serverStats.totalBytes)).toMatchInlineSnapshot(`"144k"`)
 
     const modules = await analyzeSizes(['node_modules/**/*'], serverDir, pagesRootDir)
-    expect.soft(roundToKilobytes(modules.totalBytes)).toMatchInlineSnapshot(`"1565k"`)
+    expect.soft(roundToKilobytes(modules.totalBytes)).toMatchInlineSnapshot(`"1898k"`)
 
     const packages = modules.files
       .filter(m => m.endsWith('package.json'))
@@ -136,22 +136,30 @@ describe.skipIf(process.env.SKIP_BUNDLE_SIZE === 'true' || process.env.ECOSYSTEM
         "@vue/compiler-core",
         "@vue/compiler-dom",
         "@vue/compiler-ssr",
+        "@vue/devtools-api",
+        "@vue/devtools-kit",
+        "@vue/devtools-kit/node_modules/hookable",
+        "@vue/devtools-shared",
         "@vue/reactivity",
         "@vue/runtime-core",
         "@vue/runtime-dom",
         "@vue/server-renderer",
         "@vue/shared",
+        "birpc",
         "devalue",
         "entities",
         "entities/dist/commonjs",
         "estree-walker",
         "hookable",
         "nostics",
+        "perfect-debounce",
         "source-map-js",
         "ufo",
         "unhead",
+        "unhead/node_modules/hookable",
         "vue",
         "vue-bundle-renderer",
+        "vue-router",
       ]
     `)
   })
