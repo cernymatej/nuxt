@@ -514,11 +514,23 @@ export interface ConfigSchema {
      */
     keyedFunctions: KeyedFunction[]
     /**
+     * Functions to inject a key for.
+     *
+     * @deprecated Use `optimization.keyedFunctions` instead.
+     */
+    keyedComposables: KeyedFunction[]
+    /**
      * Factories for functions that should be registered for automatic key injection.
      *
      * @see keyedFunctions
      */
     keyedFunctionFactories: KeyedFunctionFactory[]
+    /**
+     * Factories for functions that should be registered for automatic key injection.
+     *
+     * @deprecated Use `optimization.keyedFunctionFactories` instead.
+     */
+    keyedComposableFactories: KeyedFunctionFactory[]
 
     /**
      * Tree shake code from specific builds.
