@@ -1,12 +1,14 @@
 /// <reference path="../fixtures/basic/.nuxt/nuxt.d.ts" />
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 import { defineEventHandler } from 'h3'
 import { registerEndpoint } from '@nuxt/test-utils/runtime'
-import { computed, toValue } from 'vue'
+import { flushPromises } from '@vue/test-utils'
+import { computed, ref, toValue } from 'vue'
 import { defineUseAsyncDataAddon, defineUseFetchAddon } from '#app/composables/addons'
 import type { UseAsyncDataAddonOptions, UseFetchAddonOptions } from '#app/composables/addons'
 import { createUseFetch as _createUseFetch } from '#app/composables/fetch'
 import { createUseAsyncData as _createUseAsyncData } from '#app/composables/asyncData'
+import type { AsyncDataExecuteOptions, _AsyncData } from '#app/composables/asyncData'
 
 const createUseFetch = (_createUseFetch as unknown as { __nuxt_factory: typeof _createUseFetch }).__nuxt_factory
 const createUseAsyncData = (_createUseAsyncData as unknown as { __nuxt_factory: typeof _createUseAsyncData }).__nuxt_factory
@@ -222,5 +224,118 @@ describe('useAsyncData addons', () => {
     await result.refresh()
 
     expect(signals).toEqual([true, true])
+  })
+})
+
+interface ThrowOnErrorOptions { throwOnError?: boolean }
+
+function throwOnErrorExtension (options: ThrowOnErrorOptions) {
+  return (asyncData: _AsyncData<unknown, unknown>) => {
+    // capture before Object.assign replaces it with the wrapped version
+    const refresh = asyncData.refresh
+    const wrapped = async (opts?: AsyncDataExecuteOptions & ThrowOnErrorOptions) => {
+      const result = await refresh(opts)
+      if ((opts?.throwOnError ?? options.throwOnError) && asyncData.error.value) {
+        throw asyncData.error.value
+      }
+      return result
+    }
+    const extension = {
+      refresh: wrapped,
+      execute: wrapped,
+      then (this: unknown, onFulfilled?: ((value: unknown) => unknown) | null, onRejected?: ((reason: unknown) => unknown) | null) {
+        if (!(this instanceof Promise)) {
+          const { then: _then, ...plain } = asyncData as unknown as Record<string, unknown>
+          return onFulfilled?.(plain)
+        }
+        // called as the awaited composable's own `then`: reject if the run failed.
+        return Promise.prototype.then.call(this, (value) => {
+          if (options.throwOnError && asyncData.error.value) {
+            throw asyncData.error.value
+          }
+          return value
+        }).then(onFulfilled, onRejected)
+      },
+    }
+    // hide the runtime-only `then` shim from the inferred extension type,
+    // so awaiting the composable keeps its normal typing
+    return extension as Omit<typeof extension, 'then'>
+  }
+}
+
+const asyncDataThrowOnErrorAddon = defineUseAsyncDataAddon({
+  setup: (options: UseAsyncDataAddonOptions<ThrowOnErrorOptions>) => throwOnErrorExtension(options),
+})
+const fetchThrowOnErrorAddon = defineUseFetchAddon({
+  setup: (options: UseFetchAddonOptions<ThrowOnErrorOptions>) => throwOnErrorExtension(options),
+})
+
+const useThrowingAsyncData = createUseAsyncData({ addons: [asyncDataThrowOnErrorAddon] })
+const useThrowingFetch = createUseFetch({ addons: [fetchThrowOnErrorAddon] })
+
+describe('useAsyncData (throwOnError addon)', () => {
+  let uniqueKey: string
+  let counter = 0
+
+  beforeEach(() => {
+    uniqueKey = `key-${++counter}`
+  })
+
+  it('should throw on error when throwOnError option is set', async () => {
+    await expect(
+      useThrowingAsyncData(uniqueKey, () => Promise.reject(new Error('test')), { throwOnError: true }),
+    ).rejects.toThrow()
+  })
+
+  it('should throw on error via execute option override', async () => {
+    const { execute } = useThrowingAsyncData(uniqueKey, () => Promise.reject(new Error('test')), { immediate: false })
+    await expect(execute({ throwOnError: true })).rejects.toThrow()
+  })
+
+  it('should not throw when throwOnError is false (default)', async () => {
+    const { error, status } = await useThrowingAsyncData(uniqueKey, () => Promise.reject(new Error('test')))
+    expect(error.value).toBeTruthy()
+    expect(status.value).toBe('error')
+  })
+
+  it('should not cause unhandled rejection when watch triggers re-fetch with throwOnError', async () => {
+    const trigger = ref(0)
+    let callCount = 0
+    const { error } = await useThrowingAsyncData(uniqueKey, () => {
+      callCount++
+      // First call succeeds, subsequent (watch-triggered) calls fail
+      if (callCount === 1) { return Promise.resolve('ok') }
+      return Promise.reject(new Error('watch-triggered error'))
+    }, { throwOnError: true, watch: [trigger] })
+
+    expect(error.value).toBeFalsy()
+
+    // Without _rethrow guard, this would throw as an unhandled rejection.
+    trigger.value++
+    await flushPromises()
+
+    expect(error.value).toBeTruthy()
+  })
+})
+
+describe('useFetch (throwOnError addon)', () => {
+  it('should throw on error when throwOnError option is set', async () => {
+    registerEndpoint('/api/throw-test', defineEventHandler(() => {
+      throw new Error('fetch error')
+    }))
+
+    await expect(
+      useThrowingFetch('/api/throw-test', { throwOnError: true }),
+    ).rejects.toThrow()
+  })
+
+  it('should not throw when throwOnError is false (default)', async () => {
+    registerEndpoint('/api/throw-test-default', defineEventHandler(() => {
+      throw new Error('fetch error')
+    }))
+
+    await expect(
+      useThrowingFetch('/api/throw-test-default'),
+    ).resolves.toBeDefined()
   })
 })
