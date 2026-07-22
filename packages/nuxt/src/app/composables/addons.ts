@@ -9,7 +9,7 @@ declare const AddonMarker: unique symbol
 
 type SerializableValue = string | number | boolean | null | undefined | SerializableValue[] | { [key: string]: SerializableValue }
 
-type AsyncDataAddonInstance = _AsyncData<unknown, unknown>
+export type AsyncDataAddonInstance = _AsyncData<unknown, unknown>
 
 export type AsyncDataAddonSetup<Ext> = (asyncData: AsyncDataAddonInstance) => Ext | void
 
@@ -99,7 +99,8 @@ export type MergedAddonsOptions<Addons extends ReadonlyArray<any>> =
 export type MergedAddonsExtensions<Addons extends ReadonlyArray<any>> =
   [Addons[number]] extends [never]
     ? {}
-    : UnionToIntersection<Addons[number] extends { [AddonMarker]?: { options: any, extension: infer E } } ? E : never>
+    // promise-method wrappers are runtime behavior, not part of the instance surface
+    : Omit<UnionToIntersection<Addons[number] extends { [AddonMarker]?: { options: any, extension: infer E } } ? E : never>, PromiseMethod>
 
 type AnyAddon = {
   setup: (options: any) => AsyncDataAddonSetup<any> | void
@@ -136,11 +137,43 @@ export function runAddonSetups (
   return { setups, keyed }
 }
 
-export function attachAddonExtensions (setups: ReadonlyArray<AsyncDataAddonSetup<any>>, instance: object): void {
+type PromiseMethodNext = (...args: unknown[]) => Promise<unknown>
+type PromiseMethodWrapper = (next: PromiseMethodNext, ...args: unknown[]) => Promise<unknown>
+
+const PROMISE_METHODS = ['then', 'catch', 'finally'] as const
+type PromiseMethod = typeof PROMISE_METHODS[number]
+
+export type AddonPromiseWrappers = Partial<Record<PromiseMethod, PromiseMethodWrapper[]>>
+
+export function attachAddonExtensions (setups: ReadonlyArray<AsyncDataAddonSetup<unknown>>, instance: object): AddonPromiseWrappers | undefined {
+  let wrappers: AddonPromiseWrappers | undefined
   for (const setup of setups) {
     const extension = setup(instance as AsyncDataAddonInstance)
     if (extension && typeof extension === 'object') {
+      for (const method of PROMISE_METHODS) {
+        const wrapper = (extension as Record<string, unknown>)[method]
+        if (typeof wrapper === 'function') {
+          ((wrappers ??= {})[method] ??= []).push(wrapper as PromiseMethodWrapper)
+          // promise-method wrappers apply to the awaitable promise, not the instance itself
+          delete (extension as Record<string, unknown>)[method]
+        }
+      }
       Object.assign(instance, extension)
     }
   }
+  return wrappers
+}
+
+export function wrapPromiseMethod<T extends (...args: never[]) => Promise<unknown>> (base: T, wrappers: PromiseMethodWrapper[] | undefined): T {
+  if (!wrappers?.length) {
+    return base
+  }
+  let wrapped = base as unknown as PromiseMethodNext
+  // compose right-to-left so the first addon's wrapper is outermost, like middleware
+  for (let i = wrappers.length - 1; i >= 0; i--) {
+    const wrapper = wrappers[i]!
+    const next = wrapped
+    wrapped = (...args) => wrapper(next, ...args)
+  }
+  return wrapped as unknown as T
 }

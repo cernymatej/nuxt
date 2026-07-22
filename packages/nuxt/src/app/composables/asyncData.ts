@@ -12,7 +12,7 @@ import { onNuxtReady } from './ready'
 import { traceAsync } from '../internal/tracing'
 import { defineKeyedFunctionFactory } from '../../compiler/runtime'
 import { dataDiagnostics } from '../diagnostics/data'
-import { attachAddonExtensions, runAddonSetups } from './addons'
+import { attachAddonExtensions, runAddonSetups, wrapPromiseMethod } from './addons'
 import type { AsyncDataAddonSetup, MergedAddonsExtensions, MergedAddonsOptions, UseAsyncDataAddon } from './addons'
 
 import { asyncDataDefaults, granularCachedData, pendingWhenIdle, purgeCachedData, tracingChannelNuxt } from '#build/nuxt.config.mjs'
@@ -663,20 +663,21 @@ export const createUseAsyncData: CreateUseAsyncData = defineKeyedFunctionFactory
         },
       }
 
-      if (setups?.length) {
-        attachAddonExtensions(setups, asyncReturn)
-      }
+      const promiseWrappers = setups?.length ? attachAddonExtensions(setups, asyncReturn) : undefined
 
       // Allow directly awaiting on asyncData
       const asyncDataPromise = Promise.resolve(nuxtApp._asyncDataPromises[key.value]).then(() => asyncReturn) as AsyncData<ResT, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>)>
-      Object.assign(asyncDataPromise, asyncReturn)
+      // `await` bypasses `then` overridden on a native promise, so addon wrappers only
+      // take effect on a plain thenable
+      const awaitable = (promiseWrappers ? {} : asyncDataPromise) as typeof asyncDataPromise
+      Object.assign(awaitable, asyncReturn)
       // Allow destructuring without losing promise methods
-      Object.defineProperties(asyncDataPromise, {
-        then: { enumerable: true, value: asyncDataPromise.then.bind(asyncDataPromise) },
-        catch: { enumerable: true, value: asyncDataPromise.catch.bind(asyncDataPromise) },
-        finally: { enumerable: true, value: asyncDataPromise.finally.bind(asyncDataPromise) },
+      Object.defineProperties(awaitable, {
+        then: { enumerable: true, value: wrapPromiseMethod(asyncDataPromise.then.bind(asyncDataPromise), promiseWrappers?.then) },
+        catch: { enumerable: true, value: wrapPromiseMethod(Promise.prototype.catch.bind(awaitable), promiseWrappers?.catch) },
+        finally: { enumerable: true, value: wrapPromiseMethod(Promise.prototype.finally.bind(awaitable), promiseWrappers?.finally) },
       })
-      return asyncDataPromise as AsyncData<PickFrom<DataT, PickKeys>, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>)>
+      return awaitable as AsyncData<PickFrom<DataT, PickKeys>, (NuxtErrorDataT extends Error | NuxtError ? NuxtErrorDataT : NuxtError<NuxtErrorDataT>)>
     }
 
     return useAsyncData as unknown as UseAsyncData<FResT, FDataT, FPickKeys, FDefaultT, MergedAddonsOptions<FAddons>, MergedAddonsExtensions<FAddons>>
