@@ -21,21 +21,21 @@ This addon attaches custom logic: a watcher that refreshes the data whenever the
 
 ```ts [app/composables/useCustomFetch.ts]
 const refreshOnFocus = defineUseFetchAddon({
-    // augment the call-site options for the custom useFetch instance 👇
-    setup: (options: UseFetchAddonOptions<{ refreshOnFocus?: boolean }>) => {
-        // 👈 run code *before* calling `useAsyncData` in `useFetch`
-        if (import.meta.server || !options.refreshOnFocus) { return }
+  // augment the call-site options for the custom useFetch instance 👇
+  setup: (options: UseFetchAddonOptions<{ refreshOnFocus?: boolean }>) => {
+    // 👈 run code *before* calling `useAsyncData` in `useFetch`
+    if (import.meta.server || !options.refreshOnFocus) { return }
 
-        return (asyncData) => {
-            // 👈 run code *after* calling `useAsyncData` in `useFetch`
-            const focused = useWindowFocus()
-            watch(focused, (focused) => {
-                if (focused) { asyncData.refresh() }
-            })
+    return (asyncData) => {
+      // 👈 run code *after* calling `useAsyncData` in `useFetch`
+      const focused = useWindowFocus()
+      watch(focused, (focused) => {
+        if (focused) { asyncData.refresh() }
+      })
 
-            return { focused } // 👈 extend the returned object with a new property
-        }
-    },
+      return { focused } // 👈 extend the returned object with a new property
+    }
+  },
 })
 
 export const useCustomFetch = createUseFetch({ addons: [refreshOnFocus] })
@@ -125,7 +125,6 @@ const minDuration = defineUseFetchAddon({
   },
 })
 ```
-
 
 ## Contributing to the Auto-Generated Key
 

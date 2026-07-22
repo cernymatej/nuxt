@@ -100,14 +100,14 @@ const refreshOnFocus = defineUseAsyncDataAddon({
   setup: (options: UseAsyncDataAddonOptions<{ refreshOnFocus?: boolean }>) => {
     // 👈 run code *before* creating the `useAsyncData` instance
     if (import.meta.server || !options.refreshOnFocus) { return }
-    
+
     return (asyncData) => {
       // 👈 run code *after* creating the `useAsyncData` instance
       const focused = useWindowFocus()
       watch(focused, (focused) => {
         if (focused) { asyncData.refresh() }
       })
-        
+
       return { focused } // 👈 extend the returned object with a new property
     }
   },
